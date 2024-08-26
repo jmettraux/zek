@@ -32,7 +32,7 @@ File `n_019190ff68977073a7acc4052367a551_prisoner_227.md`:
 
 [self](#019190ff68977073a7acc4052367a551)
 
-:literature
+:literature :author
 
 Aleksandr Solzhenitsyn, the Russian novelist and historian, was designated the
 prisoner number 227 when he was imprisoned in a Soviet labor camp. "Zek" is an
@@ -47,7 +47,7 @@ File `n_01919101182776a18709137411c3ec49_one_day_in_the_life_of_iv.md`:
 
 ## "One Day in the Life of Ivan Denisovich"
 
-:literature
+:literature :book
 
 [self](#01919101182776a18709137411c3ec49)
 
