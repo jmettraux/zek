@@ -8,6 +8,21 @@ ZettelKasten.
 
 Zek stores permanent notes. Fleeting (transient) notes are outside of Zek.
 
+Vim is the interface.
+
+* create note
+* edit note
+* delete note (archive?)
+* duplicate note
+* list notes
+* query notes
+
+A repository is Git-enabled, creating or editing a note results in a Git commit. Fixing problems is done via `git revert` and friends.
+
+Backup via Tarsnap.
+
+One "executable" zek orchestrates the repository.
+
 
 ### Dir structure
 
@@ -57,6 +72,8 @@ in 1962, describes a single day of an ordinary prisoner in a Soviet labor camp
 in the 1950s. Shukhov is a former POW from World War II who was sentenced to a
 labor camp for being accused of spying after his capture by the Germans. The
 novel explores his daily life and survival in the harsh conditions of the camp.
+
+<!-- status: archived -->
 ```
 
 #### Links
