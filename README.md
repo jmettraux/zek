@@ -74,6 +74,9 @@ labor camp for being accused of spying after his capture by the Germans. The
 novel explores his daily life and survival in the harsh conditions of the camp.
 
 <!-- status: archived -->
+<!-- ctime: Tue Aug 27 13:58:29 JST 2024 -->
+<!-- mtime: Tue Aug 27 14:58:01 JST 2024 -->
+<!-- source: Telegram -->
 ```
 
 #### Links
