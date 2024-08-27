@@ -29,14 +29,18 @@ One "executable" zek orchestrates the repository.
 `ZEK_REPO_PATH` env variable... or --repo-path or -p
 
 ```
-root/
-  root.md # list of links
+repo/
+  root.md  # list of links, or is trees.yaml below better?
   09/
     47/
       n_019190ef87437aea9bd426d424fb4709_something.md
   66/
     4e/
       n_019190ef99117d68bbeae96629db4e66_some_other_thing.md
+  index/
+    words.yaml
+    tags.yaml
+    trees.yaml
 ```
 
 ### Note structure
@@ -47,9 +51,7 @@ File `n_019190ff68977073a7acc4052367a551_prisoner_227.md`:
 
 ## prisoner 227
 
-[self](#019190ff68977073a7acc4052367a551)
-
-:literature :author
+[self](#019190ff68977073a7acc4052367a551) :literature :author
 
 Aleksandr Solzhenitsyn, the Russian novelist and historian, was designated the
 prisoner number 227 when he was imprisoned in a Soviet labor camp. "Zek" is an
@@ -64,9 +66,7 @@ File `n_01919101182776a18709137411c3ec49_one_day_in_the_life_of_iv.md`:
 
 ## "One Day in the Life of Ivan Denisovich"
 
-:literature :book
-
-[self](#01919101182776a18709137411c3ec49)
+[self](#01919101182776a18709137411c3ec49) :literature :book
 
 Ivan Denisovich Shukhov is the protagonist of the novel "One Day in the Life of
 Ivan Denisovich" by Russian author Aleksandr Solzhenitsyn. The novel, published
@@ -83,11 +83,31 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 
 #### Links
 
+- vertical links (child to [parent]).
+- horizontal links (slide)
+- self link ([self])
+
 TODO `[self](#01919101182776a18709137411c3ec49)`
 
 #### Tags
 
-TODO `:todo :list :whatever`
+Tags, like `:todo :list :whatever` are placed after the [self] link.
+
+
+#### Lang
+
+`fr-ch` or `en-us`?
+
+```md
+[self](#01919101182776a18709137411c3ec49) fr-ch :literature :book
+```
+
+The tags are in English, but the content here would be French (Swiss flavour).
+
+Or would an attribute be better? Defaults to `en-us`.
+```md
+<!-- lang: en-us -->
+```
 
 
 ## LICENSE
