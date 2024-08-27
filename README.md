@@ -26,6 +26,8 @@ One "executable" zek orchestrates the repository.
 
 ### Dir structure
 
+`ZEK_REPO_PATH` env variable... or --repo-path or -p
+
 ```
 root/
   root.md # list of links
