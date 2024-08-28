@@ -25,5 +25,28 @@ describe Zek do
       end
     end
   end
+
+  describe 'extract_uuid()' do
+
+    {
+
+      "n_01919658a6ac715b951cd094dd489d48_foobar" =>
+        "01919658a6ac715b951cd094dd489d48",
+      "i_0191973cc9437110939d4f5ac9432a4d_toto.png" =>
+        "0191973cc9437110939d4f5ac9432a4d",
+
+      nil => nil,
+      123 => nil,
+      'nada' => nil,
+      [] => nil,
+
+    }.each do |k, v|
+
+      it "returns #{v.inspect} for #{k}" do
+
+        expect(Zek.extract_uuid(k)).to eq(v)
+      end
+    end
+  end
 end
 

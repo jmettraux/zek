@@ -62,6 +62,12 @@ module Zek
 
 # TODO
     end
+
+    def extract_uuid(s)
+
+      m = s.to_s.downcase.match(/([a-f0-9]{32})/)
+      m ? m[1] : nil
+    end
   end
 end
 
