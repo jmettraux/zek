@@ -4,11 +4,7 @@
 "
 " cd ~/.vim/scripts && ln -s ~/zek/vim/zek.vim .
 
-" TODO
+exe 'set runtimepath+=' . expand('%:p:h') . '/vim'
 
-echo expand('%')
-echo expand('%:p')
-echo expand('%:p:h')
-exe 'runtime! ' . expand('%:p:h') . '/**/zek/*.vim'
-exe 'source ' . expand('%:p:h') . '/**/zek/*.vim'
+runtime! zek/**/*.vim
 
