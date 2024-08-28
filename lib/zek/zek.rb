@@ -9,6 +9,11 @@ module Zek
       fail('Please set $ZEK_REPO_PATH env var')
     end
 
+    def path(*a)
+
+      File.join(repo_path, *a)
+    end
+
     def monow
 
       Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -25,7 +30,7 @@ module Zek
     #
     def _uuid
 
-      i = SecureRandom.random_bytes(16).bytes
+      id = SecureRandom.random_bytes(16).bytes
 
       # current timestamp in ms
 
@@ -33,29 +38,29 @@ module Zek
 
       # timestamp
 
-      i[0] = (ts >> 40) & 0xFF
-      i[1] = (ts >> 32) & 0xFF
-      i[2] = (ts >> 24) & 0xFF
-      i[3] = (ts >> 16) & 0xFF
-      i[4] = (ts >> 8) & 0xFF
-      i[5] = ts & 0xFF
+      id[0] = (ts >> 40) & 0xFF
+      id[1] = (ts >> 32) & 0xFF
+      id[2] = (ts >> 24) & 0xFF
+      id[3] = (ts >> 16) & 0xFF
+      id[4] = (ts >> 8) & 0xFF
+      id[5] = ts & 0xFF
 
       # version and variant
 
-      i[6] = (i[6] & 0x0F) | 0x70
-      i[8] = (i[8] & 0x3F) | 0x80
+      id[6] = (id[6] & 0x0F) | 0x70
+      id[8] = (id[8] & 0x3F) | 0x80
 
-      i
+      id
     end
 
     def uuid_to_path(u)
 
-      File.join(*[ u[-2, 2], u[-4, 2] ])
+      Zek.path(u[-2, 2], u[-4, 2])
     end
 
     def uuid
 
-      # TODO
+# TODO
     end
   end
 end

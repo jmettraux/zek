@@ -14,14 +14,14 @@ describe Zek do
 
     {
 
-      "01919658a6ac715b951cd094dd489d48" =>
-        "48/9d/01919658a6ac715b951cd094dd489d48",
+      "01919658a6ac715b951cd094dd489d48" => "48/9d",
+      "0191973cc9437110939d4f5ac9432a4d" => "4d/2a",
 
     }.each do |k, v|
 
       it "returns #{v.inspect} for #{k}" do
 
-        expect(Zek.uuid_to_path(k)).to eq(v)
+        expect(Zek.uuid_to_path(k)).to eq(Zek.path(v))
       end
     end
   end

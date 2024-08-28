@@ -10,6 +10,8 @@
 
 require 'zek'
 
+ENV['ZEK_REPO_PATH'] = File.join(File.dirname(__FILE__), 'repo')
+
 
 module Helpers
 end # Helpers
