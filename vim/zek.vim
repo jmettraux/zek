@@ -6,3 +6,9 @@
 
 " TODO
 
+echo expand('%')
+echo expand('%:p')
+echo expand('%:p:h')
+exe 'runtime! ' . expand('%:p:h') . '/**/zek/*.vim'
+exe 'source ' . expand('%:p:h') . '/**/zek/*.vim'
+
