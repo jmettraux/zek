@@ -48,5 +48,22 @@ describe Zek do
       end
     end
   end
+
+  describe 'uuid_to_time()' do
+
+    {
+
+      "01919658a6ac715b951cd094dd489d48" => 1724804277,
+      "01919b3ec78679f3bda68a1b6432b58d" => 1724886468,
+      "01919b3ed2f7721f97f3dfbd0acfed57" => 1724886471,
+
+    }.each do |k, v|
+
+      it "returns #{v} for #{k.inspect}" do
+
+        expect(Zek.uuid_to_time(k).to_i).to eq(v)
+      end
+    end
+  end
 end
 

@@ -28,13 +28,13 @@ module Zek
     #               rand_a
     # ```
     #
-    def _uuid
+    def _uuid(t=Time.now)
 
       id = SecureRandom.random_bytes(16).bytes
 
       # current timestamp in ms
 
-      ts = (Time.now.to_f * 1000).to_i
+      ts = (t.to_f * 1000).to_i
 
       # timestamp
 
@@ -67,6 +67,13 @@ module Zek
 
       m = s.to_s.downcase.match(/([a-f0-9]{32})/)
       m ? m[1] : nil
+    end
+
+    def uuid_to_time(u)
+
+      u = extract_uuid(u); return nil unless u
+
+      Time.at(u[0, 12].to_i(16).to_f / 1000)
     end
   end
 end

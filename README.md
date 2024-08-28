@@ -41,6 +41,7 @@ repo/
     words.yaml
     tags.yaml
     trees.yaml
+    links.yaml # ? is it really necessary
 ```
 
 ### Note structure
@@ -80,6 +81,8 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 <!-- mtime: Tue Aug 27 14:58:01 JST 2024 -->
 <!-- source: Telegram -->
 ```
+
+(ctime: is not necessary, it's in the UUID...)
 
 #### Links
 
