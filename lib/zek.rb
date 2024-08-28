@@ -2,9 +2,13 @@
 #
 # lib/zek.rb
 
-module Zek
+require 'securerandom'
+require 'time'
 
-  # TODO
+require 'zek/zek'
+
+
+module Zek
 end
 
 

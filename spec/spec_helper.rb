@@ -12,8 +12,6 @@ require 'zek'
 
 
 module Helpers
-
-  def monow; Process.clock_gettime(Process::CLOCK_MONOTONIC); end
 end # Helpers
 
 RSpec.configure do |c|

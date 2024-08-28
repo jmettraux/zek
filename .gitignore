@@ -1,6 +1,10 @@
 
 .vim*
 
+.rspec.out
+.errors
+.bxsinfo.yaml
+
 .chat.md
 .openai*
 

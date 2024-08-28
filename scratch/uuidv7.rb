@@ -39,9 +39,10 @@
 
 
 require 'securerandom'
-require 'time'
+#require 'time'
 
 def uuidv7
+
   # random bytes
   value = SecureRandom.random_bytes(16).bytes
 
