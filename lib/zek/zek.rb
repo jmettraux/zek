@@ -50,17 +50,24 @@ module Zek
       id[6] = (id[6] & 0x0F) | 0x70
       id[8] = (id[8] & 0x3F) | 0x80
 
-      id
+      id.pack('C*').unpack1('H*')
     end
 
-    def uuid_to_path(u)
+    def uuid_to_path(u, *rest)
 
-      Zek.path(u[-2, 2], u[-4, 2])
+      Zek.path(u[-2, 2], u[-4, 2], *rest)
     end
 
+    # Checks that the uuid is unused before returning it...
+    #
     def uuid
 
-# TODO
+      loop do
+
+        u = _uuid
+
+        return u if Dir[uuid_to_path(u, "n_#{u}_*.md")].empty?
+      end
     end
 
     def extract_uuid(s)

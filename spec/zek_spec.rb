@@ -10,6 +10,15 @@ require 'spec_helper'
 
 describe Zek do
 
+  describe '_uuid' do
+
+    it 'returns a String UUID' do
+
+      expect(Zek._uuid(1724973791.49255)
+        ).to match(/^0191a07339047[a-z0-9]{19}$/)
+    end
+  end
+
   describe 'uuid_to_path()' do
 
     {
@@ -23,6 +32,14 @@ describe Zek do
 
         expect(Zek.uuid_to_path(k)).to eq(Zek.path(v))
       end
+    end
+
+    it 'joins path elements' do
+
+      u = Zek._uuid
+      s = Zek.uuid_to_path(u, "n_#{u}_*.md")
+
+      expect(s.split('/').last).to match(/^n_#{u}_\*\.md$/)
     end
   end
 
