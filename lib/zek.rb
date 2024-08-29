@@ -7,17 +7,7 @@ require 'time'
 
 require 'zek/zek'
 
-
-module Zek
-
-  class << self
-
-    def cmd_make(lines)
-
-      p [ :make, lines ]
-    end
-  end
-end
+Dir[File.join(__dir__, 'zek', 'cmd_*.rb')].each { |pa| require(pa) }
 
 
 if __FILE__ == $0
