@@ -38,10 +38,20 @@ repo/
     4e/
       n_019190ef99117d68bbeae96629db4e66_some_other_thing.md
   index/
-    words.yaml
+    mtimes.yaml # { path: mtime_when_indexed }
     tags.yaml
     trees.yaml
     links.yaml # ? is it really necessary
+    words.yaml # OR
+    words/
+      ant.txt
+      myrmidon.txt
+      zebra.txt # OR
+    words/
+      a.yaml
+      b.yaml
+      z.yaml
+      nonlatin.yaml
 ```
 
 ### Note structure
