@@ -114,5 +114,44 @@ describe Zek do
       end
     end
   end
+
+  describe 'extract_links()' do
+
+    {
+
+      "nada" => [
+        ],
+      "[parent](#1234)" => [
+        [ 'parent', '#1234' ] ],
+      "[self](#1234) and [toto](https://example.org)" => [
+        [ 'self', '#1234' ], [ 'toto', 'https://example.org' ] ],
+      "[toto](https://example.org) vs [parent](#3456e)" => [
+        [ 'toto', 'https://example.org' ], [ 'parent', '#3456e' ] ],
+
+    }.each do |k, v|
+
+      it "returns #{v.inspect} for #{k.inspect}" do
+
+        expect(Zek.extract_links(k)).to eq(v)
+      end
+    end
+  end
+
+  describe 'extract_parent()' do
+    {
+
+      "nada" => nil,
+      "[parent](#1234)" => '#1234',
+      "[self](#1234) and [toto](https://example.org)" => nil,
+      "[toto](https://example.org) vs [parent](#3456e)" => '#3456e',
+
+    }.each do |k, v|
+
+      it "returns #{v.inspect} for #{k.inspect}" do
+
+        expect(Zek.extract_parent(k)).to eq(v)
+      end
+    end
+  end
 end
 
