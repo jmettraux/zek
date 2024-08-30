@@ -57,17 +57,20 @@ module Zek
 
       Zek.path(u[-2, 2], u[-4, 2], *rest)
     end
+    alias uuid_path uuid_to_path
 
     # Checks that the uuid is unused before returning it...
     #
     def uuid
 
-      loop do
+      1_000.times do
 
         u = _uuid
 
         return u if Dir[uuid_to_path(u, "n_#{u}_*.md")].empty?
       end
+
+      fail "couldn't find a free UUIDv7 :-("
     end
 
     def extract_uuid(s)
