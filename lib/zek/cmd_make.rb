@@ -23,6 +23,8 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 <!-- source: Telegram -->
 }
 
+  MAX_FN_TITLE_LENGTH = 28
+
   def cmd_make(lines)
 
     u = Zek.uuid
@@ -41,7 +43,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
     t = title
     t = t[1..-1] while t[0, 1] == '#'
     t = t.strip.downcase.gsub(/[^a-z0-9]/, '_')
-    t = t[0, 35] + '_' if t.length > 35
+    t = t[0, MAX_FN_TITLE_LENGTH - 1] + '_' if t.length > MAX_FN_TITLE_LENGTH
 
     fn = Zek.uuid_path(u, "n_#{u}_#{t}.md")
 
