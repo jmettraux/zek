@@ -87,6 +87,11 @@ module Zek; class << self
     Time.at(u[0, 12].to_i(16).to_f / 1000)
   end
 
+  def long_utc_iso8601_tstamp(t=Time.now)
+
+    t.dup.utc.strftime('%Y-%m-%dT%H:%M:%S.%LZ')
+  end
+
   def extract_links(line)
 
     line.scan(/\[[^\]]+\]\([^\s)]+\)/)

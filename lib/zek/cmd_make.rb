@@ -44,7 +44,18 @@ novel explores his daily life and survival in the harsh conditions of the camp.
     t = t[0, 35] + '_' if t.length > 35
 
     fn = Zek.uuid_path(u, "n_#{u}_#{t}.md")
-p fn
+
+    FileUtils.mkdir_p(File.dirname(fn))
+
+    File.open(fn, 'wb') do |f|
+
+      lines.each { |l| f.puts(l) }
+
+      n = Time.now
+      f.puts("\n<!-- mtime: #{Zek.long_utc_iso8601_tstamp(n)} #{n} -->")
+    end
+
+    [ u, fn ]
   end
 
   protected
