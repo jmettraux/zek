@@ -16,6 +16,8 @@ if empty(g:_zek_ruby)
   let g:_zek_ruby = reverse(sort(rubies))[0]
 endif
 
+let g:_zek_rb = expand('%:p:h') . '/lib/zek.rb'
+
 
 "
 " load $zek/vim/zek/*.vim

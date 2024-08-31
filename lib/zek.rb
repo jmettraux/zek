@@ -6,8 +6,10 @@ require 'time'
 require 'fileutils'
 require 'securerandom'
 
-require 'zek/zek'
 
+$: << __dir__ unless $:.include?(__dir__)
+
+require 'zek/zek'
 
 Dir[File.join(__dir__, 'zek', 'cmd_*.rb')].each { |pa| require(pa) }
 
