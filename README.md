@@ -42,6 +42,7 @@ repo/
     tags.yaml
     trees.yaml
     links.yaml # ? is it really necessary
+    aliases.yaml
     words.yaml # OR
     words/
       ant.txt
@@ -63,6 +64,7 @@ File `n_019190ff68977073a7acc4052367a551_prisoner_227.md`:
 ## prisoner 227
 
 [self](#019190ff68977073a7acc4052367a551) :literature :author
+[self](#solzhenitsyn) :literature :author
 
 Aleksandr Solzhenitsyn, the Russian novelist and historian, was designated the
 prisoner number 227 when he was imprisoned in a Soviet labor camp. "Zek" is an
