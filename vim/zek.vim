@@ -22,7 +22,8 @@ let g:_zek_rb = expand('%:p:h') . '/lib/zek.rb'
 "
 " load $zek/vim/zek/*.vim
 
-exe 'set runtimepath+=' . expand('%:p:h') . '/vim'
+let zek_vim_dir = fnamemodify(resolve(expand('<sfile>:p')), ':p:h')
+exe 'set runtimepath+=' . zek_vim_dir
 
 runtime! zek/**/*.vim
 
