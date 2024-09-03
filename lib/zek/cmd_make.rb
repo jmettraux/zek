@@ -74,7 +74,10 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 
 puts "---"
     { title: title || 'none',
-      links: links, atts: atts, tags: tags, words: words }
+      links: links.sort_by(&:first),
+      atts: atts.sort_by(&:first),
+      tags: tags.sort.uniq,
+      words: words.sort.uniq }
 .tap { |x| pp x }
   end
 end; end

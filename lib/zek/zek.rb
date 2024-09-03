@@ -18,8 +18,11 @@ module Zek; class << self
   def ignored_words
 
     $ignored_words ||= (
-      File.read(path('ignored_words.txt')).split(/\s+/).collect(&:strip)
-        ) rescue []
+      File.read(path('index/ignored_words.txt'))
+        .downcase
+        .split(/\s+/)
+        .collect(&:strip)
+          ) rescue []
   end
 
   def monow
@@ -128,6 +131,7 @@ module Zek; class << self
 
     line
       .scan(/\w+/)
+      .reject { |w| w.length == 1 }
       .reject { |w| w.match(/^\d+/) }
       .collect(&:downcase)
       .reject { |w| ignored_words.include?(w) }
