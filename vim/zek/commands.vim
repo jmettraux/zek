@@ -64,7 +64,7 @@ command! -nargs=* ZekList :call <SID>ZekList(<f-args>)
 "
 function! s:ZekIndex()
 
-  " TODO
+  call <SID>ZekRun([ 'index' ])
 
 endfunction " ZekIndex
 
