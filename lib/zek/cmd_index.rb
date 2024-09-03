@@ -55,23 +55,36 @@ module Zek; class << self
 
     File.open(ipath, 'wb') { |f| f.write(YAML.dump(d)) }
 
-    #rpath = ipath[0..-6] + '.rb'
-    #File.open(rpath, 'wb') { |f| f.write(Marshal.dump(d)) }
+    rpath = ipath[0..-6] + '.rb'
+    File.open(rpath, 'wb') { |f| f.write(Marshal.dump(d)) }
 
     nil
+  end
+
+  def load_index(path)
+
+    pat = path[0..path.rindex('.') - 1]
+    pat = pat + '.index' unless pat.end_with?('.index')
+    paty = pat + '.yaml'
+    patr = pat + '.rb'
+
+    d = File.exist?(patr) && (Marshal.load(File.read(patr)) rescue nil)
+    d = d || (File.exist?(paty) && YAML.load_file(paty) rescue nil)
+
+    d
   end
 
   def index_words
 
     ws = {}
 
-    Dir[Zek.path('*/*/n_*.index.yaml')].each do |path|
+    Dir[Zek.path('*/*/n_*.md')].each do |path|
 
       u = Zek.extract_uuid(path)
-      d = YAML.load_file(path) rescue nil
+      d = load_index(path)
 
       unless d
-        puts "x  could not load #{path}, skipping..."
+        puts "x  could not load index for #{path}, skipping..."
         next
       end
 
