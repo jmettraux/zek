@@ -55,6 +55,9 @@ module Zek; class << self
 
     File.open(ipath, 'wb') { |f| f.write(YAML.dump(d)) }
 
+    #rpath = ipath[0..-6] + '.rb'
+    #File.open(rpath, 'wb') { |f| f.write(Marshal.dump(d)) }
+
     nil
   end
 
@@ -79,6 +82,7 @@ module Zek; class << self
     end
 
     File.open(path('index/words.yaml'), 'wb') { |f| f.write(YAML.dump(ws)) }
+    File.open(path('index/words.rb'), 'wb') { |f| f.write(Marshal.dump(ws)) }
   end
 end; end
 
