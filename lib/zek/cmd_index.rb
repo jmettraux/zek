@@ -24,6 +24,13 @@ module Zek; class << self
   def cmd_index(lines)
 
     index_each_file
+
+    index_words
+# TODO
+    #index_tags
+    #index_titles
+    #index_selves
+    #index_parents
   end
 
   protected # beware, it's Zek/self here...
@@ -49,6 +56,29 @@ module Zek; class << self
     File.open(ipath, 'wb') { |f| f.write(YAML.dump(d)) }
 
     nil
+  end
+
+  def index_words
+
+    ws = {}
+
+    Dir[Zek.path('*/*/n_*.index.yaml')].each do |path|
+
+      u = Zek.extract_uuid(path)
+      d = YAML.load_file(path) rescue nil
+
+      unless d
+        puts "x  could not load #{path}, skipping..."
+        next
+      end
+
+      d[:words].each do |w|
+
+        (ws[w] ||= []) << u
+      end
+    end
+
+    File.open(path('index/words.yaml'), 'wb') { |f| f.write(YAML.dump(ws)) }
   end
 end; end
 
