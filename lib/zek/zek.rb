@@ -15,6 +15,13 @@ module Zek; class << self
     File.join(repo_path, *a)
   end
 
+  def ignored_words
+
+    $ignored_words ||= (
+      File.read(path('ignored_words.txt')).split(/\s+/).collect(&:strip)
+        ) rescue []
+  end
+
   def monow
 
     Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -100,10 +107,26 @@ module Zek; class << self
         [ ss[0][1..-1], ss[1][0..-2] ] }
   end
 
-  def extract_parent(line)
+  def extract_tags(line)
 
-    k, v = extract_links(line).assoc('parent')
-    k ? v : nil
+    line
+      .scan(/(?:^|\s):([a-z0-9A-Z_-]+)/)
+      .flatten
+  end
+
+  def extract_atts(line)
+
+# TODO
+    []
+  end
+
+  def extract_words(line)
+
+    line
+      .scan(/\w+/)
+      .reject { |w| w.match(/^\d+/) }
+      .collect(&:downcase)
+      .reject { |w| ignored_words.include?(w) }
   end
 end; end
 
