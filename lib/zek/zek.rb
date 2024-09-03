@@ -116,8 +116,12 @@ module Zek; class << self
 
   def extract_atts(line)
 
-# TODO
-    []
+    m = line.match(/^<!--\s*([a-z0-9_-]+)\s*:\s*(.+)\s*-->\s*$/)
+
+    return [] unless m
+    return [] if %w[ mtime ].include?(m[1])
+
+    [ [ m[1], m[2].strip ] ]
   end
 
   def extract_words(line)
