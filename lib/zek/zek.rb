@@ -102,6 +102,45 @@ module Zek; class << self
     t.dup.utc.strftime('%Y-%m-%dT%H:%M:%S.%LZ')
   end
 
+  def extract_hash_title(lines)
+
+    lines.each do |l|
+
+      l = neutralize_links(l).strip
+
+      m = l.match(/^\#{1,2}[ 	]+(.+)/)
+      return m[1].strip if m
+    end
+
+    nil
+  end
+
+  def extract_text_title(lines)
+
+    lines.each do |l|
+
+      l = neutralize_links(l).strip
+
+      return l if l.length > 2 && l.match?(/\A[^:<\[\]\(\)]/)
+    end
+
+    nil
+  end
+
+  def extract_title(lines)
+
+    (
+      extract_hash_title(lines) ||
+      extract_text_title(lines) ||
+      'none'
+    ).gsub(/["]/, '')
+  end
+
+  def neutralize_links(line)
+
+    line.gsub(/\[([^\]]+)\]\([^\)]+\)/, '\1')
+  end
+
   def extract_links(line)
 
     line.scan(/\[[^\]]+\]\([^\s)]+\)/)

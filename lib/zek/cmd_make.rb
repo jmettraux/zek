@@ -31,7 +31,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 
     x = do_index_lines(lines)
 
-    t = x['title']
+    t = x[:title]
     t = t[1..-1] while t[0, 1] == '#'
     t = t.strip.downcase.gsub(/[^a-z0-9]/, '_')
     t = t[0, MAX_FN_TITLE_LENGTH - 1] + '_' if t.length > MAX_FN_TITLE_LENGTH
@@ -55,15 +55,16 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 
   def do_index_lines(lines)
 
-    title = nil
     links = []
     tags = []
     atts = []
     words = []
 
+    title = extract_title(lines)
+
     lines.each do |l|
 
-      title ||= l.strip if l.match?(/^\#{1,2} +./)
+      #title ||= l.strip if l.match?(/^\#{1,2} +./)
       links += extract_links(l)
       tags += extract_tags(l)
       atts += extract_atts(l)
@@ -73,7 +74,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
     parent = links.assocv('parent')
 
 puts "---"
-    { title: title || 'none',
+    { title: title,
       links: links.sort_by(&:first),
       atts: atts.sort_by(&:first),
       tags: tags.sort.uniq,
