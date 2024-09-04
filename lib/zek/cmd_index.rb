@@ -25,12 +25,12 @@ module Zek; class << self
 
     index_each_file
 
-    index_words
+    index_arrays # words and tags
 # TODO
-    #index_tags
     #index_titles
     #index_selves
     #index_parents
+    #index_links
   end
 
   protected # beware, it's Zek/self here...
@@ -74,9 +74,10 @@ module Zek; class << self
     d
   end
 
-  def index_words
+  def index_arrays
 
-    ws = {}
+    words = {}
+    tags = {}
 
     Dir[Zek.path('*/*/n_*.md')].each do |path|
 
@@ -88,14 +89,18 @@ module Zek; class << self
         next
       end
 
-      d[:words].each do |w|
-
-        (ws[w] ||= []) << u
-      end
+      d[:words].each { |w| (words[w] ||= []) << u }
+      d[:tags].each { |w| (tags[w] ||= []) << u }
     end
 
-    File.open(path('index/words.yaml'), 'wb') { |f| f.write(YAML.dump(ws)) }
-    File.open(path('index/words.rb'), 'wb') { |f| f.write(Marshal.dump(ws)) }
+    words = words.sort.to_h
+    tags = tags.sort.to_h
+
+    File.open(path('index/words.yaml'), 'wb') { |f| f.write(YAML.dump(words)) }
+    File.open(path('index/words.rb'), 'wb') { |f| f.write(Marshal.dump(words)) }
+
+    File.open(path('index/tags.yaml'), 'wb') { |f| f.write(YAML.dump(tags)) }
+    File.open(path('index/tags.rb'), 'wb') { |f| f.write(Marshal.dump(tags)) }
   end
 end; end
 
