@@ -90,6 +90,11 @@ module Zek; class << self
     m ? m[1] : nil
   end
 
+  def is_uuid?(s)
+
+    s.to_s.match?(/\A#?[a-f0-9]{32}\z/)
+  end
+
   def uuid_to_time(u)
 
     u = extract_uuid(u); return nil unless u

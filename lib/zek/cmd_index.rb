@@ -25,11 +25,13 @@ module Zek; class << self
 
     index_each_file
 
-    index_core # title, words, and tags
-# TODO
+    index_all_files
+
     #index_selves
-    #index_parents
     #index_links
+      #
+    #index_parents
+    #index_trees
   end
 
   protected # beware, it's Zek/self here...
@@ -73,11 +75,15 @@ module Zek; class << self
     d
   end
 
-  def index_core
+  def index_all_files
 
     titles = {}
     words = {}
     tags = {}
+    links = {}
+    parents = {}
+    children = {}
+    selves = {}
 
     Dir[Zek.path('*/*/n_*.md')].each do |path|
 
@@ -93,15 +99,44 @@ module Zek; class << self
 
       d[:words].each { |w| (words[w] ||= []) << u }
       d[:tags].each { |w| (tags[w] ||= []) << u }
+
+      d[:links].each do |rel, href|
+        if rel == 'self'
+          if ! is_uuid?(href)
+            (selves[u] ||= []) << href
+            (selves[href] ||= []) << u
+          end
+        elsif rel == 'parent'
+          parents[u] = href
+          (children[href] ||= []) << u
+        else
+          a = [ u, rel, href ]
+          (links[rel] ||= []) << a
+          (links[href] ||= []) << a
+        end
+      end
     end
 
     titles = titles.sort.to_h
     words = words.sort.to_h
     tags = tags.sort.to_h
+    links = links.sort.to_h
+    selves = selves.sort.to_h
+    parents = parents.sort.to_h
+    children = children.sort.to_h
 
     write_index(:titles, titles)
     write_index(:words, words)
     write_index(:tags, tags)
+    write_index(:links, links)
+    write_index(:selves, selves)
+    write_index(:parents, parents)
+    write_index(:children, children)
+
+    trees = {}
+# TODO
+
+    write_index(:trees, trees)
   end
 
   def write_index(key, values)
