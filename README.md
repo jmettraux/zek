@@ -59,12 +59,12 @@ repo/
 
 File `n_019190ff68977073a7acc4052367a551_prisoner_227.md`:
 ```
-[parent](#019190ef87437aea9bd426d424fb4709)
+[parent](019190ef87437aea9bd426d424fb4709)
 
 ## prisoner 227
 
-[self](#019190ff68977073a7acc4052367a551) :literature :author
-[self](#solzhenitsyn) :literature :author
+[self](019190ff68977073a7acc4052367a551) :literature :author
+[self](solzhenitsyn) :literature :author
 
 Aleksandr Solzhenitsyn, the Russian novelist and historian, was designated the
 prisoner number 227 when he was imprisoned in a Soviet labor camp. "Zek" is an
@@ -75,11 +75,11 @@ Wrote ["One Day in the Life of Ivan Denisovich"](#01919101182776a18709137411c3ec
 
 File `n_01919101182776a18709137411c3ec49_one_day_in_the_life_of_iv.md`:
 ```
-[parent](#019190ef87437aea9bd426d424fb4709)
+[parent](019190ef87437aea9bd426d424fb4709)
 
 ## "One Day in the Life of Ivan Denisovich"
 
-[self](#01919101182776a18709137411c3ec49) :literature :book
+[self](01919101182776a18709137411c3ec49) :literature :book
 
 Ivan Denisovich Shukhov is the protagonist of the novel "One Day in the Life of
 Ivan Denisovich" by Russian author Aleksandr Solzhenitsyn. The novel, published
@@ -102,7 +102,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 - horizontal links (slide)
 - self link ([self])
 
-TODO `[self](#01919101182776a18709137411c3ec49)`
+TODO `[self](01919101182776a18709137411c3ec49)`
 
 #### Tags
 
@@ -114,7 +114,7 @@ Tags, like `:todo :list :whatever` are placed after the [self] link.
 `fr-ch` or `en-us`?
 
 ```md
-[self](#01919101182776a18709137411c3ec49) fr-ch :literature :book
+[self](01919101182776a18709137411c3ec49) fr-ch :literature :book
 ```
 
 The tags are in English, but the content here would be French (Swiss flavour).
