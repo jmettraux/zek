@@ -77,13 +77,42 @@ module Zek; class << self
 
   def index_all_files
 
+    #
+    # make a first pass to index "selves", aka "self" links, aliases to oneself
+
+    selves = {}
+
+    Dir[Zek.path('*/*/n_*.md')].each do |path|
+
+      u = Zek.extract_uuid(path)
+      d = load_index(path)
+
+      d[:links].each do |rel, href|
+
+        next unless rel == 'self'
+
+        if ! is_uuid?(href)
+          (selves[u] ||= []) << href
+          (selves[href] ||= []) << u
+        end
+      end
+    end
+
+    write_index(:selves, selves)
+
+    reself = lambda { |href|
+      u = extract_uuid(href)
+      u ? href : (selves[u] || []).first }
+
+    #
+    # do the main indexing
+
     titles = {}
     words = {}
     tags = {}
     links = {}
     parents = {}
     children = {}
-    selves = {}
 
     Dir[Zek.path('*/*/n_*.md')].each do |path|
 
@@ -102,15 +131,15 @@ module Zek; class << self
 
       d[:links].each do |rel, href|
         if rel == 'self'
-          if ! is_uuid?(href)
-            (selves[u] ||= []) << href
-            (selves[href] ||= []) << u
-          end
+          # already done above
         elsif rel == 'parent'
-          parents[u] = href
-          (children[href] ||= []) << u
+          #parents[u] = href
+          pu = reself[href]
+          parents[u] = pu
+          (children[pu] ||= []) << u
         else
-          a = [ u, rel, href ]
+          hu = reself[href]
+          a = [ u, rel, hu ]; a << href if href != hu
           (links[rel] ||= []) << a
           (links[href] ||= []) << a
         end
@@ -123,13 +152,13 @@ module Zek; class << self
     links = links.sort.to_h
     selves = selves.sort.to_h
     parents = parents.sort.to_h
+pp children
     children = children.sort.to_h
 
     write_index(:titles, titles)
     write_index(:words, words)
     write_index(:tags, tags)
     write_index(:links, links)
-    write_index(:selves, selves)
     write_index(:parents, parents)
     write_index(:children, children)
 
