@@ -124,6 +124,10 @@ Or would an attribute be better? Defaults to `en-us`.
 <!-- lang: en-us -->
 ```
 
+## stop words
+
+See https://www.ranks.nl/stopwords
+
 
 ## LICENSE
 

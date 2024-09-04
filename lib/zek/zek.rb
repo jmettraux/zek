@@ -15,13 +15,14 @@ module Zek; class << self
     File.join(repo_path, *a)
   end
 
-  def ignored_words
+  def stop_words
 
-    $ignored_words ||= (
-      File.read(path('index/ignored_words.txt'))
+    $stop_words ||= (
+      File.read(path('index/stop_words.txt'))
         .downcase
         .split(/\s+/)
         .collect(&:strip)
+        .uniq
           ) rescue []
   end
 
@@ -178,7 +179,7 @@ module Zek; class << self
       .reject { |w| w.length == 1 }
       .reject { |w| w.match(/^\d+/) }
       .collect(&:downcase)
-      .reject { |w| ignored_words.include?(w) }
+      .reject { |w| stop_words.include?(w) }
   end
 end; end
 
