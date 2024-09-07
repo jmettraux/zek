@@ -22,7 +22,7 @@ describe Zek, :repo do
         an extensive review of carrier capability.
       }.htrip.split(/\n/)
 
-      u, fn = Zek.cmd_make(lines)
+      u, fn = Zek.cmd_make([], lines)
 
       s = File.read(fn)
       ls = s.split("\n")

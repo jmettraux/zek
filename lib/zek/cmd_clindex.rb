@@ -4,7 +4,7 @@
 
 module Zek; class << self
 
-  def cmd_clindex(lines)
+  def cmd_clindex(args, lines)
 
     Zek.paths('*.i.*').each do |path|
 

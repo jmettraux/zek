@@ -25,7 +25,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 
   MAX_FN_TITLE_LENGTH = 28
 
-  def cmd_make(lines)
+  def cmd_make(args, lines)
 
     u = Zek.uuid
 

@@ -8,9 +8,9 @@
 #  ruby -e "s = eval(File.read(Dir['*.gemspec'][0])); puts s.version"
 
 index:
-	echo "index" | time ruby lib/zek.rb
+	time ruby lib/zek.rb index
 clindex:
-	echo "clindex" | time ruby lib/zek.rb
+	time ruby lib/zek.rb clindex
 
 spec:
 	bundle exec rspec

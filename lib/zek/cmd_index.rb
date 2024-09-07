@@ -21,7 +21,7 @@
 
 module Zek; class << self
 
-  def cmd_index(lines)
+  def cmd_index(args, lines)
 
     index_each_file
 
