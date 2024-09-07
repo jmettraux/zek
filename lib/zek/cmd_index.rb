@@ -38,9 +38,9 @@ module Zek; class << self
 
   def index_each_file
 
-    Dir[Zek.path('*/*/n_*.md')].each do |path|
+    Dir[Zek.path('*/*/*.md')].each do |path|
 
-      ipath = path[0..-4] + '.index.yaml'
+      ipath = path[0..-4] + '.i.yaml'
 
       fmtime = File.mtime(path)
       imtime = File.mtime(ipath) rescue Time.at(0)
@@ -65,7 +65,7 @@ module Zek; class << self
   def load_index(path)
 
     pat = path[0..path.rindex('.') - 1]
-    pat = pat + '.index' unless pat.end_with?('.index')
+    pat = pat + '.i' unless pat.end_with?('.i')
     paty = pat + '.yaml'
     patr = pat + '.rb'
 
@@ -82,7 +82,7 @@ module Zek; class << self
 
     selves = {}
 
-    Dir[Zek.path('*/*/n_*.md')].each do |path|
+    Dir[Zek.path('*/*/*.md')].each do |path|
 
       u = Zek.extract_uuid(path)
       d = load_index(path)
@@ -114,7 +114,7 @@ module Zek; class << self
     parents = {}
     children = {}
 
-    Dir[Zek.path('*/*/n_*.md')].each do |path|
+    Dir[Zek.path('*/*/*.md')].each do |path|
 
       u = Zek.extract_uuid(path)
       d = load_index(path)

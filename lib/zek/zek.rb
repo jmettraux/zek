@@ -15,6 +15,29 @@ module Zek; class << self
     File.join(repo_path, *a)
   end
 
+  AA_REX = /\A[a-f0-9]{2}\z/.freeze
+  UUID_REX = /\A[a-f0-9]{32}\z/.freeze
+
+  OPEN_UUID_REX = /
+    (?<=\b|[^a-f0-9])
+    ([a-f0-9]{32})
+    (?=\b|[^a-f0-9])
+      /x.freeze
+
+  def paths(a)
+
+    Dir[Zek.path('*/*', a)]
+      .collect { |path|
+        path.split('/')[-3..-1] }
+      .select { |aa, bb, fn|
+        ffn = fn.split(/[_.]/)
+        aa.match?(AA_REX) &&
+        bb.match?(AA_REX) &&
+        ffn[0].match?(UUID_REX) }
+      .collect { |aa, bb, fn|
+        Zek.path(aa, bb, fn) }
+  end
+
   def stop_words
 
     $stop_words ||= (
@@ -87,13 +110,13 @@ module Zek; class << self
 
   def extract_uuid(s)
 
-    m = s.to_s.downcase.match(/([a-f0-9]{32})/)
+    m = s.to_s.downcase.match(OPEN_UUID_REX)
     m ? m[1] : nil
   end
 
   def is_uuid?(s)
 
-    s.to_s.match?(/\A#?[a-f0-9]{32}\z/)
+    s.to_s.match?(UUID_REX)
   end
 
   def uuid_to_time(u)

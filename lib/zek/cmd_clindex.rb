@@ -6,8 +6,7 @@ module Zek; class << self
 
   def cmd_clindex(lines)
 
-    #Dir[Zek.path('*/*/n_*.index.{rb,yaml}')].each do |path|
-    Dir[Zek.path('*/*/n_*.index.*')].each do |path|
+    Zek.paths('*.i.*').each do |path|
 
       FileUtils.rm_f(path)
       puts ". rm #{path}"

@@ -85,6 +85,8 @@ describe Zek do
         '0191973cc9437110939d4f5ac9432a4d',
       '#0191973cc9437110939d4f5ac9432a4d' =>
         '0191973cc9437110939d4f5ac9432a4d',
+      "~/zek/spec/repo/16/47/0191a60139397fb6bc6e66d918eb4716_t0.md" =>
+        '0191a60139397fb6bc6e66d918eb4716',
 
       nil => nil,
       123 => nil,
@@ -160,8 +162,10 @@ describe Zek do
     {
 
       '01919658a6ac715b951cd094dd489d48' => true,
-      '#01919658a6ac715b951cd094dd489d48' => true,
 
+      "~/zek/spec/repo/16/47/0191a60139397fb6bc6e66d918eb4716_t0.md" => false,
+      '#01919658a6ac715b951cd094dd489d48' => false,
+      'aaa01919658a6ac715b951cd094dd489d48fff' => false,
       'toto' => false,
       '#01919' => false,
       123 => false,
@@ -173,6 +177,19 @@ describe Zek do
 
         expect(Zek.is_uuid?(k)).to eq(v)
       end
+    end
+  end
+
+  describe 'paths("*.md")' do
+
+    it 'returns a list of paths matching *.md in the repo structure' do
+
+      expect(
+        Zek.paths('*.md')
+          .collect { |pa| File.join(pa.split('/')[-3..-1]) }
+      ).to eq([
+       '16/47/0191a60139397fb6bc6e66d918eb4716_test_0.md'
+      ])
     end
   end
 end
