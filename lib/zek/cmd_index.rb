@@ -67,29 +67,30 @@ module Zek; class << self
     #
     # make a first pass to index "selves", aka "self" links, aliases to oneself
 
-    selves = {}
+    selves = sort_index_hash(
 
-    Dir[Zek.path('*/*/*.md')].each do |path|
+      Dir[Zek.path('*/*/*.md')].inject({}) { |h, path|
 
-      u = Zek.extract_uuid(path)
-      d = load_index(path)
+        u = Zek.extract_uuid(path)
+        d = load_index(path)
 
-      d[:links].each do |rel, href|
+        d[:links].each do |rel, href|
 
-        next unless rel == 'self'
+          next unless rel == 'self'
 
-        if ! is_uuid?(href)
-          (selves[u] ||= []) << href
-          (selves[href] ||= []) << u
+          if ! is_uuid?(href)
+            (h[u] ||= []) << href
+            (h[href] ||= []) << u
+          end
         end
-      end
-    end
+        h })
+puts "selves:"; pp selves
 
     write_index(:selves, selves)
 
     reself = lambda { |href|
       u = extract_uuid(href)
-      u ? href : (selves[u] || []).first }
+      u ? href : (selves[href] || []).first }
 
     #
     # do the main indexing
@@ -120,12 +121,11 @@ module Zek; class << self
         if rel == 'self'
           # already done above
         elsif rel == 'parent'
-          #parents[u] = href
           pu = reself[href]
           parents[u] = pu
           (children[pu] ||= []) << u
         else
-          hu = reself[href]
+          hu = reself[href] || href
           a = [ u, rel, hu ]; a << href if href != hu
           (links[rel] ||= []) << a
           (links[href] ||= []) << a
@@ -133,26 +133,35 @@ module Zek; class << self
       end
     end
 
-    titles = titles.sort.to_h
-    words = words.sort.to_h
-    tags = tags.sort.to_h
-    links = links.sort.to_h
-    selves = selves.sort.to_h
-    parents = parents.sort.to_h
-pp children
-    children = children.sort.to_h
+    titles = sort_index_hash(titles)
+#puts "titles:"; pp titles
+    words = sort_index_hash(words)
+#puts "words:"; pp words
+    tags = sort_index_hash(tags)
+#puts "tags:"; pp tags
+    links = sort_index_hash(links)
+puts "links:"; pp links
+    parents = sort_index_hash(parents)
+puts "parents:"; pp parents
+    children = sort_index_hash(children)
+puts "children:"; pp children
 
-    write_index(:titles, titles)
-    write_index(:words, words)
-    write_index(:tags, tags)
-    write_index(:links, links)
-    write_index(:parents, parents)
-    write_index(:children, children)
+#    write_index(:titles, titles)
+#    write_index(:words, words)
+#    write_index(:tags, tags)
+#    write_index(:links, links)
+#    write_index(:parents, parents)
+#    write_index(:children, children)
+#
+#    trees = {}
+## TODO
+#
+#    write_index(:trees, trees)
+  end
 
-    trees = {}
-# TODO
+  def sort_index_hash(h)
 
-    write_index(:trees, trees)
+    h.each { |k, v| h[k] = v.sort if v.is_a?(Array) }.sort.to_h
   end
 
   def write_index(key, values)
