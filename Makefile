@@ -12,6 +12,8 @@ index:
 clindex:
 	time ruby lib/zek.rb clindex
 
+indexspecrepo:
+	ZEK_REPO_PATH=spec/repo/ ruby lib/zek.rb index
 cleanspecrepo:
 	rm -fR spec/repo/*
 specrepo: cleanspecrepo
