@@ -84,7 +84,7 @@ module Zek; class << self
           end
         end
         h })
-puts "selves:"; pp selves
+#puts "selves:"; pp selves
 
     write_index(:selves, selves)
 
@@ -140,23 +140,44 @@ puts "selves:"; pp selves
     tags = sort_index_hash(tags)
 #puts "tags:"; pp tags
     links = sort_index_hash(links)
-puts "links:"; pp links
+#puts "links:"; pp links
     parents = sort_index_hash(parents)
-puts "parents:"; pp parents
+#puts "parents:"; pp parents
     children = sort_index_hash(children)
-puts "children:"; pp children
+#puts "children:"; pp children
 
-#    write_index(:titles, titles)
-#    write_index(:words, words)
-#    write_index(:tags, tags)
-#    write_index(:links, links)
-#    write_index(:parents, parents)
-#    write_index(:children, children)
-#
-#    trees = {}
-## TODO
-#
-#    write_index(:trees, trees)
+    write_index(:titles, titles)
+    write_index(:words, words)
+    write_index(:tags, tags)
+    write_index(:links, links)
+    write_index(:parents, parents)
+    write_index(:children, children)
+
+    nodes = {}
+      #
+    parents.each { |u, _| nodes[u] = [ u, [] ] }
+    children.each { |u, _| nodes[u] ||= [ u, [] ] }
+      #
+    children.each { |u, cn|
+      n = nodes[u]
+      cn.each { |cu| n[1] << nodes[cu] } }
+#puts; puts "nodes:"; pp nodes
+
+    pks = parents.keys
+    trees = nodes.values.reject { |u, cn| pks.include?(u) }
+#puts "trees:"; trees.each { |t| pp t }
+
+    deself = lambda { |n|
+      u, cn = n
+      s = selves[u]; s = s ? s.first : u
+      [ s, cn.collect { |c| deself[c] } ] }
+
+    trees1 = trees
+      .collect { |n| deself[n] }
+#puts "trees1:"; trees1.each { |t| pp t }
+
+    write_index(:trees, trees)
+    write_index(:trees1, trees1)
   end
 
   def sort_index_hash(h)
