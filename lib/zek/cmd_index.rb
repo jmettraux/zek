@@ -168,16 +168,16 @@ module Zek; class << self
 #puts "trees:"; trees.each { |t| pp t }
 
     deself = lambda { |n|
-      u, cn = n
-      s = selves[u]; s = s ? s.first : u
-      [ s, cn.collect { |c| deself[c] } ] }
+      u0, cn = n
+      u1 = selves[u0]; u1 = u1 ? u1.first : nil
+      [ u0, u1, cn.collect { |c| deself[c] } ] }
 
     trees1 = trees
       .collect { |n| deself[n] }
 #puts "trees1:"; trees1.each { |t| pp t }
 
-    write_index(:trees, trees)
-    write_index(:trees1, trees1)
+    #write_index(:trees, trees)
+    write_index(:trees, trees1)
   end
 
   def sort_index_hash(h)
