@@ -185,7 +185,7 @@ module Zek; class << self
       .flatten
   end
 
-  def extract_atts(line)
+  def extract_attrs(line)
 
     m = line.match(/^<!--\s*([a-z0-9_-]+)\s*:\s*(.+)\s*-->\s*$/)
 

@@ -12,10 +12,16 @@ index:
 clindex:
 	time ruby lib/zek.rb clindex
 
+cleanspecrepo:
+	rm -fR spec/repo/*
+specrepo: cleanspecrepo
+	ZEK_REPO_PATH=spec/repo/ ruby lib/zek.rb import spec/raw/
+	tree spec/repo/
+
 spec:
 	bundle exec rspec
 test: spec
 
 
-.PHONY: spec index clindex
+.PHONY: spec index clindex specrepo cleanspecrepo
 

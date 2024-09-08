@@ -36,7 +36,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
     t = t.strip.downcase.gsub(/[^a-z0-9]/, '_')
     t = t[0, MAX_FN_TITLE_LENGTH - 1] + '_' if t.length > MAX_FN_TITLE_LENGTH
 
-    fn = Zek.uuid_path(u, "n_#{u}_#{t}.md")
+    fn = Zek.uuid_path(u, "#{u}_#{t}.md")
 
     FileUtils.mkdir_p(File.dirname(fn))
 
@@ -48,38 +48,48 @@ novel explores his daily life and survival in the harsh conditions of the camp.
       f.puts("\n<!-- mtime: #{Zek.long_utc_iso8601_tstamp(n)} #{n} -->")
     end
 
-    [ u, fn ]
+    [ u, fn, x ]
   end
 
   protected # beware, it's Zek/self here...
 
+  ATTACHMENT_SUFFIXES = %w[
+    .jpg .gif .png .jpeg .svg .webp .heic
+    .pdf
+    .csv .txt
+      ].freeze
+
   def do_index_lines(lines)
 
-    links = []
     tags = []
-    atts = []
+    links = []
+    attrs = []
     words = []
 
     title = extract_title(lines)
 
     lines.each do |l|
 
-      #title ||= l.strip if l.match?(/^\#{1,2} +./)
-      links += extract_links(l)
       tags += extract_tags(l)
-      atts += extract_atts(l)
+      links += extract_links(l)
+      attrs += extract_attrs(l)
       words += extract_words(l)
     end
 
+    attcs = links
+      .inject([]) { |a, (k, v)|
+        a << v if ATTACHMENT_SUFFIXES.include?(File.extname(v).downcase)
+        a }
+
     parent = links.assocv('parent')
 
-puts "---"
     { title: title,
-      links: links.sort_by(&:first),
-      atts: atts.sort_by(&:first),
       tags: tags.sort.uniq,
-      words: words.sort.uniq }
-.tap { |x| pp x }
+      links: links.sort_by(&:first),
+      attrs: attrs.sort_by(&:first),
+      words: words.sort.uniq,
+      attcs: attcs }
+#.tap { |x| pp x }
   end
 end; end
 

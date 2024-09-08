@@ -186,9 +186,23 @@ describe Zek do
 
       expect(
         Zek.paths('*.md')
-          .collect { |pa| File.join(pa.split('/')[-3..-1]) }
-      ).to eq([
-       '16/47/0191a60139397fb6bc6e66d918eb4716_test_0.md'
+          .collect { |pa| File.basename(pa)[32..-1] }
+          .sort
+      ).to eq(%w[
+        _3_other_caesar_s_battles.md _5_caeasar_battles.md _test_0.md
+        _test_1.md _test_2.md _test_3.md _this_is_a_free_note.md
+      ])
+    end
+
+    it 'returns a list of paths matching *.{md,txt} in the repo structure' do
+
+      expect(
+        Zek.paths('*.{md,txt}')
+          .collect { |pa| File.basename(pa)[32..-1] }
+          .sort
+      ).to eq(%w[
+        _3_other_caesar_s_battles.md _5_caeasar_battles.md _history0.txt
+        _test_0.md _test_1.md _test_2.md _test_3.md _this_is_a_free_note.md
       ])
     end
   end
