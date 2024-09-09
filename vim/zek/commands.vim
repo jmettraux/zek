@@ -5,9 +5,9 @@
 "
 " ~protected~
 
-function! s:ZekRun(lines)
+function! s:ZekRun(cmd, lines)
 
-  let @z = system(g:_zek_ruby . ' ' . g:_zek_rb, a:lines)
+  let @z = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
   echo @z
 
   if v:shell_error == 0
@@ -25,9 +25,9 @@ endfunction " ZekRun
 "
 function! s:ZekMake() range
 
-  let ls = [ 'make' ] + getline(a:firstline, a:lastline)
+  let ls = getline(a:firstline, a:lastline)
 
-  call <SID>ZekRun(ls)
+  call <SID>ZekRun('make', ls)
 
   " TODO
 
@@ -42,6 +42,9 @@ function! s:ZekFetch(...)
 
   " TODO
   echo a:000
+  "for arg in a:000
+  "  echo arg
+  "endfor
 
 endfunction " ZekFetch
 
@@ -50,10 +53,9 @@ command! -nargs=* ZekFetch :call <SID>ZekFetch(<f-args>)
 
 " Fetch a list of notes
 "
-function! s:ZekList(...)
+function! s:ZekList(flavour)
 
-  " TODO
-  echo a:000
+  call <SID>ZekRun('list ' . a:flavour, ls)
 
 endfunction " ZekList
 
@@ -64,7 +66,7 @@ command! -nargs=* ZekList :call <SID>ZekList(<f-args>)
 "
 function! s:ZekIndex()
 
-  call <SID>ZekRun([ 'index' ])
+  call <SID>ZekRun('index', [])
 
 endfunction " ZekIndex
 
