@@ -11,6 +11,7 @@ require 'securerandom'
 $: << __dir__ unless $:.include?(__dir__)
 
 require 'zek/_extensions'
+require 'zek/base_z'
 require 'zek/zek'
 
 Dir[File.join(__dir__, 'zek', 'cmd_*.rb')].each { |pa| require(pa) }
