@@ -10,9 +10,22 @@ module Zek; class << self
     fail('Please set $ZEK_REPO_PATH env var')
   end
 
+  def repo_path_a
+
+    @repo_path_a ||= repo_path.splip
+  end
+
+  def starts_with_repo_path?(path)
+
+    path.psplit[0, repo_path_a.length] == repo_path
+  end
+
   def path(*a)
 
-    File.join(repo_path, *a)
+    aa = a.dup
+    aa.unshift(repo_path) unless starts_with_repo_path?(a[0])
+
+    File.join(*aa)
   end
 
   AA_REX = /\A[a-f0-9]{2}\z/.freeze
@@ -28,7 +41,7 @@ module Zek; class << self
 
     Dir[Zek.path('*/*', a)]
       .collect { |path|
-        path.split('/')[-3..-1] }
+        path.splip[-3..-1] }
       .select { |aa, bb, fn|
         ffn = fn.split(/[_.]/)
         aa.match?(AA_REX) &&

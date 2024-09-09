@@ -10,15 +10,7 @@ module Zek; class << self
     ensure_stop_words
 
     index_each_file
-
     index_all_files
-
-# FIXME
-    #index_selves
-    #index_links
-      #
-    #index_parents
-    #index_trees
   end
 
   protected # beware, it's Zek/self here...
@@ -51,10 +43,14 @@ module Zek; class << self
 
   def load_index(path)
 
-    pat = path[0..path.rindex('.') - 1]
-    pat = pat + '.i' unless pat.end_with?('.i')
-    paty = pat + '.yaml'
-    patr = pat + '.rb'
+    pat = Zek.path(path).without_extname
+
+    if pat.splip[-2] == 'index'
+    else
+      pat = path.without_extname
+      pat = pat + '.i' unless pat.end_with?('.i')
+    end
+    patr, paty = pat + '.rb', pat + '.yaml'
 
     d = File.exist?(patr) && (Marshal.load(File.read(patr)) rescue nil)
     d = d || (File.exist?(paty) && YAML.load_file(paty) rescue nil)
