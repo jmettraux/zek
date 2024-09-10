@@ -14,9 +14,30 @@ module Zek::CmdIndex; class << self
   end
 
   protected
-end; end
 
-module Zek; class << self
+  def ensure_stop_words
+
+    FileUtils.mkdir_p(Zek.path('index'))
+
+    swpath = Zek.path('index/_stop_words.txt')
+
+    File.open(swpath, 'wb') { |f| f.write(%{
+      a about above after again against all am an and any are aren't as at be
+      because been before being below between both but by can't cannot could
+      couldn't did didn't do does doesn't doing don't down during each few
+      for from further had hadn't has hasn't have haven't having he he'd
+      he'll he's her here here's hers herself him himself his how how's i i'd
+      i'll i'm i've if in into is isn't it it's its itself let's me more most
+      mustn't my myself no nor not of off on once only or other ought our
+      ours ourselves out over own same shan't she she'd she'll she's should
+      shouldn't so some such than that that's the their theirs them
+      themselves then there there's these they they'd they'll they're they've
+      this those through to too under until up very was wasn't we we'd we'll
+      we're we've were weren't what what's when when's where where's which
+      while who who's whom why why's with won't would wouldn't you you'd
+      you'll you're you've your yours yourself yourselves })
+    } unless File.exist?(swpath)
+  end
 
   def index_each_file
 
@@ -33,7 +54,7 @@ module Zek; class << self
 
   def index_file(path, ipath)
 
-    d = do_index_lines(File.readlines(path))
+    d = Zek.do_index_lines(File.readlines(path))
       # which is found in lib/zek/cmd_make.rb ...
 
     File.open(ipath, 'wb') { |f| f.write(YAML.dump(d)) }
@@ -42,26 +63,6 @@ module Zek; class << self
     File.open(rpath, 'wb') { |f| f.write(Marshal.dump(d)) }
 
     nil
-  end
-
-  def load_index(path)
-
-    pat =
-      if Zek.is_uuid?(path)
-        pats = Dir[uuid_path(path, path + '_*.{rb,yaml}')]
-        pats.any? ? pats.first.without_extname : nil
-      elsif path.index('/')
-        Zek.path(path).without_extname
-      else
-        Zek.path('index', path)
-      end
-    patr, paty =
-      pat + '.rb', pat + '.yaml'
-
-    d = File.exist?(patr) && (Marshal.load(File.read(patr)) rescue nil)
-    d = d || (File.exist?(paty) && YAML.load_file(paty) rescue nil)
-
-    d
   end
 
   def index_all_files
@@ -74,13 +75,13 @@ module Zek; class << self
       Dir[Zek.path('*/*/*.md')].inject({}) { |h, path|
 
         u = Zek.extract_uuid(path)
-        d = load_index(path)
+        d = Zek.load_index(u)
 
         d[:links].each do |rel, href|
 
           next unless rel == 'self'
 
-          if ! is_uuid?(href)
+          unless Zek.is_uuid?(href)
             (h[u] ||= []) << href
             (h[href] ||= []) << u
           end
@@ -91,7 +92,7 @@ module Zek; class << self
     write_index(:selves, selves)
 
     reself = lambda { |href|
-      u = extract_uuid(href)
+      u = Zek.extract_uuid(href)
       u ? href : (selves[href] || []).first }
 
     #
@@ -107,7 +108,7 @@ module Zek; class << self
     Dir[Zek.path('*/*/*.md')].each do |path|
 
       u = Zek.extract_uuid(path)
-      d = load_index(path)
+      d = Zek.load_index(u)
 
       unless d
         puts "x  could not load index for #{path}, skipping..."
@@ -189,34 +190,11 @@ module Zek; class << self
 
   def write_index(key, values)
 
-    File.open(path("index/#{key}.yaml"), 'wb') { |f|
+    File.open(Zek.path("index/#{key}.yaml"), 'wb') { |f|
       f.write(YAML.dump(values)) }
-    File.open(path("index/#{key}.rb"), 'wb') { |f|
+
+    File.open(Zek.path("index/#{key}.rb"), 'wb') { |f|
       f.write(Marshal.dump(values)) }
-  end
-
-  def ensure_stop_words
-
-    FileUtils.mkdir_p(Zek.path('index'))
-
-    swpath = Zek.path('index/_stop_words.txt')
-
-    File.open(swpath, 'wb') { |f| f.write(%{
-      a about above after again against all am an and any are aren't as at be
-      because been before being below between both but by can't cannot could
-      couldn't did didn't do does doesn't doing don't down during each few
-      for from further had hadn't has hasn't have haven't having he he'd
-      he'll he's her here here's hers herself him himself his how how's i i'd
-      i'll i'm i've if in into is isn't it it's its itself let's me more most
-      mustn't my myself no nor not of off on once only or other ought our
-      ours ourselves out over own same shan't she she'd she'll she's should
-      shouldn't so some such than that that's the their theirs them
-      themselves then there there's these they they'd they'll they're they've
-      this those through to too under until up very was wasn't we we'd we'll
-      we're we've were weren't what what's when when's where where's which
-      while who who's whom why why's with won't would wouldn't you you'd
-      you'll you're you've your yours yourself yourselves })
-    } unless File.exist?(swpath)
   end
 end; end
 

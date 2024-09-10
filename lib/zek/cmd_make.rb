@@ -29,7 +29,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 
     u = Zek.uuid
 
-    x = do_index_lines(lines)
+    x = Zek.do_index_lines(lines)
 
     t = x[:title]
     t = t[1..-1] while t[0, 1] == '#'
@@ -52,44 +52,5 @@ novel explores his daily life and survival in the harsh conditions of the camp.
   end
 
   protected
-
-  ATTACHMENT_SUFFIXES = %w[
-    .jpg .gif .png .jpeg .svg .webp .heic
-    .pdf
-    .csv .txt
-      ].freeze
-
-  def do_index_lines(lines)
-
-    tags = []
-    links = []
-    attrs = []
-    words = []
-
-    title = Zek.extract_title(lines)
-
-    lines.each do |l|
-
-      tags += Zek.extract_tags(l)
-      links += Zek.extract_links(l)
-      attrs += Zek.extract_attrs(l)
-      words += Zek.extract_words(l)
-    end
-
-    attcs = links
-      .inject([]) { |a, (k, v)|
-        a << v if ATTACHMENT_SUFFIXES.include?(File.extname(v).downcase)
-        a }
-
-    parent = links.assocv('parent')
-
-    { title: title,
-      tags: tags.sort.uniq,
-      links: links.sort_by(&:first),
-      attrs: attrs.sort_by(&:first),
-      words: words.sort.uniq,
-      attcs: attcs }
-#.tap { |x| pp x }
-  end
 end; end
 

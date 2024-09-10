@@ -10,7 +10,7 @@ module Zek::CmdImport; class << self
 
     Dir[File.join(from_dir, '*.md')].each do |path|
 
-      u, fn, x = Zek.cmd_make(args, File.readlines(path))
+      u, fn, x = Zek::CmdMake.execute(args, File.readlines(path))
 
       x[:attcs].each { |a| attach(path, u, fn, a) }
     end
