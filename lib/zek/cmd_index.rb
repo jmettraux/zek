@@ -43,14 +43,17 @@ module Zek; class << self
 
   def load_index(path)
 
-    pat = Zek.path(path).without_extname
-
-    if pat.splip[-2] == 'index'
-    else
-      pat = path.without_extname
-      pat = pat + '.i' unless pat.end_with?('.i')
-    end
-    patr, paty = pat + '.rb', pat + '.yaml'
+    pat =
+      if Zek.is_uuid?(path)
+        pats = Dir[uuid_path(path, path + '_*.{rb,yaml}')]
+        pats.any? ? pats.first.without_extname : nil
+      elsif path.index('/')
+        Zek.path(path).without_extname
+      else
+        Zek.path('index', path)
+      end
+    patr, paty =
+      pat + '.rb', pat + '.yaml'
 
     d = File.exist?(patr) && (Marshal.load(File.read(patr)) rescue nil)
     d = d || (File.exist?(paty) && YAML.load_file(paty) rescue nil)

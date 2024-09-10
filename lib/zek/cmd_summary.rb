@@ -11,7 +11,7 @@ module Zek; class << self
     # [ ] list selves that are used more than once
     # [ ] enumerate trees
 
-    trees = load_index('index/trees')
+    trees = load_index('trees')
 pp trees
 
     #Zek.paths('*.i.*').each do |path|
