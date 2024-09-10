@@ -2,18 +2,18 @@
 #
 # zek/cmd_trees.rb
 
-module Zek; class << self
+module Zek::CmdTrees; class << self
 
-  def cmd_trees(args, lines)
+  def execute(args, lines)
 
-    d = load_index('trees')
+    d = Zek.load_index('trees')
     d.each do |h, cn|
       p h
-      hd = load_index(h)
+      hd = Zek.load_index(h)
       p hd
     end
   end
 
-  protected # beware, it's Zek/self here...
+  protected
 end; end
 

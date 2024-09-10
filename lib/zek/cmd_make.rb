@@ -2,7 +2,7 @@
 #
 # zek/cmd_make.rb
 
-module Zek; class << self
+module Zek::CmdMake; class << self
 
 %{
 [parent](#019190ef87437aea9bd426d424fb4709)
@@ -25,7 +25,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
 
   MAX_FN_TITLE_LENGTH = 28
 
-  def cmd_make(args, lines)
+  def execute(args, lines)
 
     u = Zek.uuid
 
@@ -51,7 +51,7 @@ novel explores his daily life and survival in the harsh conditions of the camp.
     [ u, fn, x ]
   end
 
-  protected # beware, it's Zek/self here...
+  protected
 
   ATTACHMENT_SUFFIXES = %w[
     .jpg .gif .png .jpeg .svg .webp .heic
@@ -66,14 +66,14 @@ novel explores his daily life and survival in the harsh conditions of the camp.
     attrs = []
     words = []
 
-    title = extract_title(lines)
+    title = Zek.extract_title(lines)
 
     lines.each do |l|
 
-      tags += extract_tags(l)
-      links += extract_links(l)
-      attrs += extract_attrs(l)
-      words += extract_words(l)
+      tags += Zek.extract_tags(l)
+      links += Zek.extract_links(l)
+      attrs += Zek.extract_attrs(l)
+      words += Zek.extract_words(l)
     end
 
     attcs = links

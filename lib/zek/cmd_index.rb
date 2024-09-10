@@ -3,9 +3,9 @@
 # zek/cmd_index.rb
 
 
-module Zek; class << self
+module Zek::CmdIndex; class << self
 
-  def cmd_index(args, lines)
+  def execute(args, lines)
 
     ensure_stop_words
 
@@ -13,7 +13,10 @@ module Zek; class << self
     index_all_files
   end
 
-  protected # beware, it's Zek/self here...
+  protected
+end; end
+
+module Zek; class << self
 
   def index_each_file
 

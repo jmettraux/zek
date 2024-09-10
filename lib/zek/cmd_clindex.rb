@@ -2,9 +2,9 @@
 #
 # zek/cmd_clindex.rb
 
-module Zek; class << self
+module Zek::CmdClindex; class << self
 
-  def cmd_clindex(args, lines)
+  def execute(args, lines)
 
     Zek.paths('*.i.*').each do |path|
 
@@ -13,6 +13,6 @@ module Zek; class << self
     end
   end
 
-  protected # beware, it's Zek/self here...
+  protected
 end; end
 

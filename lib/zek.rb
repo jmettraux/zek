@@ -28,6 +28,6 @@ if __FILE__ == $0
   cmd ||= lines.shift
   cmd = cmd.strip.match(/^([_a-z][_a-z0-9]+)/)[1]
 
-  Zek.send("cmd_#{cmd}", args, lines)
+  Zek.const_get("Cmd#{cmd.capitalize}").execute(args, lines)
 end
 

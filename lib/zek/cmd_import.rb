@@ -2,9 +2,9 @@
 #
 # zek/cmd_import.rb
 
-module Zek; class << self
+module Zek::CmdImport; class << self
 
-  def cmd_import(args, lines)
+  def execute(args, lines)
 
     from_dir = args.shift
 
@@ -16,7 +16,7 @@ module Zek; class << self
     end
   end
 
-  protected # beware, it's Zek/self here...
+  protected
 
   def attach(path, u, fn, a)
     path0 = File.join(File.dirname(path), a)

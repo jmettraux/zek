@@ -2,9 +2,9 @@
 #
 # zek/cmd_summary.rb
 
-module Zek; class << self
+module Zek::CmdSummary; class << self
 
-  def cmd_summary(args, lines)
+  def execute(args, lines)
 
     # TODO
     #
