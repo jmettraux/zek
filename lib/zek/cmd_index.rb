@@ -193,7 +193,7 @@ module Zek; class << self
 
     FileUtils.mkdir_p(Zek.path('index'))
 
-    swpath = Zek.path('index/stop_words.txt')
+    swpath = Zek.path('index/_stop_words.txt')
 
     File.open(swpath, 'wb') { |f| f.write(%{
       a about above after again against all am an and any are aren't as at be

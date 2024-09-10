@@ -54,7 +54,7 @@ module Zek; class << self
   def stop_words
 
     $stop_words ||= (
-      File.read(path('index/stop_words.txt'))
+      File.read(path('index/_stop_words.txt'))
         .downcase
         .split(/\s+/)
         .collect(&:strip)
