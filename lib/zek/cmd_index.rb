@@ -198,8 +198,18 @@ module Zek::CmdIndex; class << self
     #
     # summaries
 
-    to_tree = {}
-      # TODO
+    compute_root_and_depth = lambda { |u|
+      compute_ = lambda { |d, n|
+        return d if n[0] == u
+        n[1].each { |nn|
+          dd = compute_[d + 1, nn]
+          return dd if dd }
+        nil }
+      trees.each { |t|
+        d = compute_[0, t]
+        return [ t[0], d ] if d
+        }
+      nil }
 
     summaries = {}
 
@@ -208,14 +218,16 @@ module Zek::CmdIndex; class << self
       u = Zek.extract_uuid(path)
       d = Zek.load_index(u)
 
+      ro, de = compute_root_and_depth[u]
+
       summaries[u] = {
         title: d[:title],
         line: d[:line],
         tags: d[:tags],
         lines: File.readlines(path).count,
         size: to_kmgt(File.size(path)),
-        root: to_tree[u],
-        depth: -1,
+        root: ro,
+        depth: de || 0,
         parent: parents[u],
         children: children[u] || [],
         attcs: d[:attcs].size, }
