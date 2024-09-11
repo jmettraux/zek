@@ -188,10 +188,11 @@ describe Zek do
         Zek.paths('*.md')
           .collect { |pa| File.basename(pa)[32..-1] }
           .sort
-          #.join(' ')
+#.tap { |x| pp x.join(' ') }
       ).to eq(%w[
-        _3_other_caesar_s_battles.md _5_caeasar_battles.md _same_self.md
-        _same_self_1.md _test_0.md _test_1.md _test_2.md _test_3.md _test_4.md
+        _3_other_caesar_s_battles.md _5_caeasar_battles.md _daniel_kanehman.md
+        _same_self.md _same_self_1.md _test_0.md _test_1.md _test_2.md
+        _test_3.md _test_4.md _this_is_a_father_to_all_quo_.md
         _this_is_a_free_note.md _this_is_a_free_note.md
       ])
     end
@@ -202,12 +203,12 @@ describe Zek do
         Zek.paths('*.{md,txt}')
           .collect { |pa| File.basename(pa)[32..-1] }
           .sort
-          #.join(' ')
+#.tap { |x| pp x.join(' ') }
       ).to eq(%w[
-        _3_other_caesar_s_battles.md _5_caeasar_battles.md _history0.txt
-        _same_self.md _same_self_1.md _test_0.md _test_1.md _test_2.md
-        _test_3.md _test_4.md _this_is_a_free_note.md _this_is_a_free_note.md
-
+        _3_other_caesar_s_battles.md _5_caeasar_battles.md _daniel_kanehman.md
+        _history0.txt _same_self.md _same_self_1.md _test_0.md _test_1.md
+        _test_2.md _test_3.md _test_4.md _this_is_a_father_to_all_quo_.md
+        _this_is_a_free_note.md _this_is_a_free_note.md
       ])
     end
   end
