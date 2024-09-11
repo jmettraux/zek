@@ -6,6 +6,7 @@ require 'time'
 require 'yaml'
 require 'fileutils'
 require 'securerandom'
+require 'io/console'
 
 
 $: << __dir__ unless $:.include?(__dir__)
@@ -15,6 +16,12 @@ require 'zek/base_z'
 require 'zek/zek'
 
 Dir[File.join(__dir__, 'zek', 'cmd_*.rb')].each { |pa| require(pa) }
+
+
+COLS =
+  (IO.console.winsize[1] rescue nil) ||
+  (`tput cols`.to_i rescue nil) ||
+  80
 
 
 if __FILE__ == $0
