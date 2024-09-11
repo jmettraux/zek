@@ -7,7 +7,7 @@
 
 function! s:ZekRun(cmd, lines)
 
-  let @z = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
+  let @z = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . a:cmd, a:lines)
   echo @z
 
   if v:shell_error == 0
@@ -50,12 +50,21 @@ endfunction " ZekFetch
 
 command! -nargs=* ZekFetch :call <SID>ZekFetch(<f-args>)
 
+function! s:ZekTrees(...)
+
+  "call <SID>ZekRun('trees ' . a:000, [])
+  call <SID>ZekRun('trees', [])
+
+endfunction " ZekTrees
+
+command! -nargs=* ZekTrees :call <SID>ZekTrees(<f-args>)
+
 
 " Fetch a list of notes
 "
 function! s:ZekList(flavour)
 
-  call <SID>ZekRun('list ' . a:flavour, ls)
+  call <SID>ZekRun('list ' . a:flavour, [])
 
 endfunction " ZekList
 
