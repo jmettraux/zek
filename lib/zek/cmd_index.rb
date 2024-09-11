@@ -15,6 +15,16 @@ module Zek::CmdIndex; class << self
 
   protected
 
+  def to_kmgt(i)
+
+    ' KMGTP'.each_char do |k|
+      return "#{i}#{k}".strip if i < 1024
+      i = i / 1024
+    end
+
+    -1
+  end
+
   def ensure_stop_words
 
     FileUtils.mkdir_p(Zek.path('index'))
@@ -156,6 +166,9 @@ module Zek::CmdIndex; class << self
     write_index(:parents, parents)
     write_index(:children, children)
 
+    #
+    # trees
+
     nodes = {}
       #
     parents.each { |u, _| nodes[u] = [ u, [] ] }
@@ -181,6 +194,36 @@ module Zek::CmdIndex; class << self
 
     #write_index(:trees, trees)
     write_index(:trees, trees1)
+
+    #
+    # summaries
+
+    to_tree = {}
+      # TODO
+
+    summaries = {}
+
+    Dir[Zek.path('*/*/*.md')].each do |path|
+
+      u = Zek.extract_uuid(path)
+      d = Zek.load_index(u)
+
+      summaries[u] = {
+        title: d[:title],
+        start: nil, # TODO
+        tags: d[:tags],
+        lines: File.readlines(path).count,
+        size: to_kmgt(File.size(path)),
+        root: to_tree[u],
+        parent: parents[u],
+        children: children[u] || [],
+        attcs: d[:attcs].size, }
+    end
+
+    summaries = sort_index_hash(summaries)
+puts "summaries:"; pp summaries
+
+    write_index(:summaries, summaries)
   end
 
   def sort_index_hash(h)
