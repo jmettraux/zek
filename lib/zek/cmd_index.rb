@@ -220,6 +220,8 @@ module Zek::CmdIndex; class << self
 
       ro, de = compute_root_and_depth[u]
 
+      li = d[:links].count { |rel, href| ! %w[ parent self ].include?(rel) }
+
       summaries[u] = {
         title: d[:title],
         line: d[:line],
@@ -230,7 +232,8 @@ module Zek::CmdIndex; class << self
         depth: de || 0,
         parent: parents[u],
         children: children[u] || [],
-        attcs: d[:attcs].size, }
+        attcs: d[:attcs].size,
+        links: li }
     end
 
     summaries = sort_index_hash(summaries)
