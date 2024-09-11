@@ -210,11 +210,12 @@ module Zek::CmdIndex; class << self
 
       summaries[u] = {
         title: d[:title],
-        start: nil, # TODO
+        line: d[:line],
         tags: d[:tags],
         lines: File.readlines(path).count,
         size: to_kmgt(File.size(path)),
         root: to_tree[u],
+        depth: -1,
         parent: parents[u],
         children: children[u] || [],
         attcs: d[:attcs].size, }

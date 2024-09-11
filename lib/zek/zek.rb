@@ -39,7 +39,7 @@ module Zek; class << self
 
   def paths(a)
 
-    Dir[Zek.path('*/*', a)]
+    Dir[path('*/*', a)]
       .collect { |path|
         path.splip[-3..-1] }
       .select { |aa, bb, fn|
@@ -48,7 +48,7 @@ module Zek; class << self
         bb.match?(AA_REX) &&
         ffn[0].match?(UUID_REX) }
       .collect { |aa, bb, fn|
-        Zek.path(aa, bb, fn) }
+        path(aa, bb, fn) }
   end
 
   def stop_words
@@ -103,7 +103,7 @@ module Zek; class << self
 
   def uuid_to_path(u, *rest)
 
-    Zek.path(u[-2, 2], u[-4, 2], *rest)
+    path(u[-2, 2], u[-4, 2], *rest)
   end
   alias uuid_path uuid_to_path
 
@@ -178,6 +178,20 @@ module Zek; class << self
     ).gsub(/["]/, '')
   end
 
+  def extract_line(line)
+
+    l = line.strip
+
+    return nil if l.length < 1
+    return nil if l.start_with?(':')
+    return nil if l.start_with?('#')
+    return nil if l.start_with?('<!--')
+    return nil if l.start_with?('[self](')
+    return nil if l.start_with?('[parent](')
+
+    l.length < 81 ? l : l[0, 79] + '…'
+  end
+
   def neutralize_links(line)
 
     line.gsub(/\[([^\]]+)\]\([^\)]+\)/, '\1')
@@ -231,14 +245,16 @@ module Zek; class << self
     attrs = []
     words = []
 
-    title = Zek.extract_title(lines)
+    title = extract_title(lines)
+    line = nil
 
     lines.each do |l|
 
-      tags += Zek.extract_tags(l)
-      links += Zek.extract_links(l)
-      attrs += Zek.extract_attrs(l)
-      words += Zek.extract_words(l)
+      line ||= extract_line(l)
+      tags += extract_tags(l)
+      links += extract_links(l)
+      attrs += extract_attrs(l)
+      words += extract_words(l)
     end
 
     attcs = links
@@ -249,6 +265,7 @@ module Zek; class << self
     parent = links.assocv('parent')
 
     { title: title,
+      line: line,
       tags: tags.sort.uniq,
       links: links.sort_by(&:first),
       attrs: attrs.sort_by(&:first),
@@ -260,13 +277,13 @@ module Zek; class << self
   def load_index(path)
 
     pat =
-      if Zek.is_uuid?(path)
+      if is_uuid?(path)
         pats = Dir[uuid_path(path, path + '_*.{rb,yaml}')]
         pats.any? ? pats.first.without_extname : nil
       elsif path.index('/')
-        Zek.path(path).without_extname
+        path(path).without_extname
       else
-        Zek.path('index', path)
+        path('index', path)
       end
     patr, paty =
       pat + '.rb', pat + '.yaml'
