@@ -48,7 +48,8 @@ novel explores his daily life and survival in the harsh conditions of the camp.
       f.puts("\n<!-- mtime: #{Zek.long_utc_iso8601_tstamp(n)} #{n} -->")
     end
 
-    Zek::CmdIndex.execute(nil, nil)
+    Zek::CmdIndex.execute(args, nil) \
+      unless args.include?(:import) || args.include?(:noindex)
 
     puts u
 
