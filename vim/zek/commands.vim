@@ -5,15 +5,22 @@
 "
 " ~protected~
 
+highlight ZekRedEchoHighlight ctermfg=red ctermbg=none
+
+function! s:ZekRedEcho(...)
+  echohl ZekRedEchoHighlight | echo join(a:000, ' ') | echohl None
+endfunction
+
 function! s:ZekRun(cmd, lines)
 
-  let @z = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . a:cmd, a:lines)
-  echo @z
+  "let @z = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . a:cmd, a:lines)
+  "echo @z
+  echo(system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . a:cmd, a:lines))
 
   if v:shell_error == 0
-    echo "Command succeeded"
+    "echo 'Command succeeded'
   else
-    echo "Command failed with exit status" v:shell_error
+    call <SID>ZekRedEcho('Command failed with exit status', v:shell_error)
   endif
 endfunction " ZekRun
 
