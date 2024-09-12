@@ -6,9 +6,13 @@
 " ~protected~
 
 highlight ZekRedEchoHighlight ctermfg=red ctermbg=none
+highlight ZekGreenEchoHighlight ctermfg=green ctermbg=none
   "
 function! s:ZekRedEcho(...)
   echohl ZekRedEchoHighlight | echo join(a:000, ' ') | echohl None
+endfunction
+function! s:ZekGreenEcho(...)
+  echohl ZekGreenEchoHighlight | echo join(a:000, ' ') | echohl None
 endfunction
 
 
@@ -19,13 +23,19 @@ function! s:ZekRun(cmd, args, lines)
   let s = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
   let e = v:shell_error
 
-  return [ e, s ]
+  return [ e, trim(s) ]
 
 endfunction " ZekRunAndRead
 
 
 "
 " ~public~
+
+"
+"  * note trees
+"  * note lists
+"  * note
+"
 
 " Create a new note
 "
@@ -35,8 +45,11 @@ function! s:ZekMake() range
 
   let car = <SID>ZekRun('make', [], ls)
 
-  " TODO
-
+  if car[0] == 0
+    call <SID>ZekGreenEcho("Added note " . car[1])
+  else
+    call <SID>ZekRedEcho("error " . car[1])
+  endif
 endfunction " ZekMake
 
 vnoremap zz :call <SID>ZekMake()
