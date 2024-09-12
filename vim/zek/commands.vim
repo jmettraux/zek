@@ -6,23 +6,22 @@
 " ~protected~
 
 highlight ZekRedEchoHighlight ctermfg=red ctermbg=none
-
+  "
 function! s:ZekRedEcho(...)
   echohl ZekRedEchoHighlight | echo join(a:000, ' ') | echohl None
 endfunction
 
-function! s:ZekRun(cmd, lines)
 
-  "let @z = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . a:cmd, a:lines)
-  "echo @z
-  echo(system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . a:cmd, a:lines))
+function! s:ZekRun(cmd, args, lines)
 
-  if v:shell_error == 0
-    "echo 'Command succeeded'
-  else
-    call <SID>ZekRedEcho('Command failed with exit status', v:shell_error)
-  endif
-endfunction " ZekRun
+  let cmd = a:cmd . ' ' . join(a:args, ' ')
+
+  let s = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
+  let e = v:shell_error
+
+  return [ e, s ]
+
+endfunction " ZekRunAndRead
 
 
 "
@@ -34,7 +33,7 @@ function! s:ZekMake() range
 
   let ls = getline(a:firstline, a:lastline)
 
-  call <SID>ZekRun('make', ls)
+  let car = <SID>ZekRun('make', [], ls)
 
   " TODO
 
@@ -60,7 +59,9 @@ command! -nargs=* ZekFetch :call <SID>ZekFetch(<f-args>)
 function! s:ZekTrees(...)
 
   "call <SID>ZekRun('trees ' . a:000, [])
-  call <SID>ZekRun('trees', [])
+  let car = <SID>ZekRun('trees', a:000, [])
+  echo 'code:' car[0]
+  echo 'result:' car[1]
 
 endfunction " ZekTrees
 
@@ -71,7 +72,7 @@ command! -nargs=* ZekTrees :call <SID>ZekTrees(<f-args>)
 "
 function! s:ZekList(flavour)
 
-  call <SID>ZekRun('list ' . a:flavour, [])
+  let car = <SID>ZekRun('list ' . a:flavour, [])
 
 endfunction " ZekList
 
@@ -82,7 +83,7 @@ command! -nargs=* ZekList :call <SID>ZekList(<f-args>)
 "
 function! s:ZekIndex()
 
-  call <SID>ZekRun('index', [])
+  let car = <SID>ZekRun('index', [])
 
 endfunction " ZekIndex
 
