@@ -16,7 +16,9 @@ if empty(g:_zek_ruby)
   let g:_zek_ruby = reverse(sort(rubies))[0]
 endif
 
-let g:_zek_rb = expand('%:p:h') . '/lib/zek.rb'
+let g:_zek_rb = fnamemodify(
+  \ fnamemodify(resolve(expand('<sfile>:p')), ':p:h') . '/../lib/zek.rb',
+  \ ':p')
 
 
 "
@@ -24,6 +26,10 @@ let g:_zek_rb = expand('%:p:h') . '/lib/zek.rb'
 
 let zek_vim_dir = fnamemodify(resolve(expand('<sfile>:p')), ':p:h')
 exe 'set runtimepath+=' . zek_vim_dir
+
+"echo "g:_zek_ruby" g:_zek_ruby
+"echo "g:_zek_rb" g:_zek_rb
+"echo "zek_vim_dir" zek_vim_dir
 
 runtime! zek/**/*.vim
 
