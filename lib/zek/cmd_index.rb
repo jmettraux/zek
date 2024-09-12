@@ -108,6 +108,7 @@ module Zek::CmdIndex; class << self
     #
     # do the main indexing
 
+    uuids = []
     titles = {}
     words = {}
     tags = {}
@@ -118,6 +119,9 @@ module Zek::CmdIndex; class << self
     Dir[Zek.path('*/*/*.md')].each do |path|
 
       u = Zek.extract_uuid(path)
+
+      uuids << u
+
       d = Zek.load_index(u)
 
       unless d
@@ -169,11 +173,10 @@ module Zek::CmdIndex; class << self
     #
     # trees
 
-    nodes = {}
-      #
-    parents.each { |u, _| nodes[u] = [ u, [] ] }
-    children.each { |u, _| nodes[u] ||= [ u, [] ] }
-      #
+    nodes = uuids
+      .sort
+      .inject({}) { |h, u| h[u] = [ u, [] ]; h }
+        #
     children.each { |u, cn|
       n = nodes[u]
       cn.each { |cu| n[1] << nodes[cu] } }
@@ -237,7 +240,7 @@ module Zek::CmdIndex; class << self
     end
 
     summaries = sort_index_hash(summaries)
-puts "summaries:"; pp summaries
+#puts "summaries:"; pp summaries
 
     write_index(:summaries, summaries)
   end
