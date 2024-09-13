@@ -218,6 +218,9 @@ module Zek::CmdIndex; class << self
           a << [ e ]
         end
         a }
+      .each { |t|
+        t.sort_by!(&:first) }
+#puts "trails:"; trails.each { |t| pp t }
 
     write_index(:trails, trails)
 
