@@ -1,6 +1,6 @@
 
 [parent](quote0)
-
+[self](kanq)
 
 # Daniel Kanehman
 

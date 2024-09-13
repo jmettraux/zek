@@ -20,6 +20,7 @@ specrepo: cleanspecrepo
 	ZEK_REPO_PATH=spec/repo/ ruby lib/zek.rb import spec/raw/
 	tree spec/repo/
 sr: specrepo indexspecrepo
+ir: indexspecrepo
 
 spec:
 	bundle exec rspec

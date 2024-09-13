@@ -8,3 +8,5 @@ This is note test 2
 
 Le Chartier Embourbé
 
+[digression](kanq)
+

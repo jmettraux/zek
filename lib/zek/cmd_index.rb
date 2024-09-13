@@ -200,6 +200,28 @@ module Zek::CmdIndex; class << self
     write_index(:trees, trees1)
 
     #
+    # trails
+
+    edges = links.values
+      .flatten(1)
+      .collect { |src, rel, dst, _| Zek.uuid?(dst) ? [ src, rel, dst ] : nil }
+      .compact
+      .uniq
+
+    m = lambda { |e0, e1| i = e0 & e1; !! i.find { |e| Zek.uuid?(e) } }
+
+    trails = edges
+      .inject([]) { |a, e|
+        if trail = a.find { |t| t.find { |ee| m[ee, e] } }
+          trail << e
+        else
+          a << [ e ]
+        end
+        a }
+
+    write_index(:trails, trails)
+
+    #
     # summaries
 
     compute_root_and_depth = lambda { |u|
@@ -244,6 +266,10 @@ module Zek::CmdIndex; class << self
 #puts "summaries:"; pp summaries
 
     write_index(:summaries, summaries)
+  end
+
+  def combine_trails(edges)
+
   end
 
   def sort_index_hash(h)

@@ -131,6 +131,7 @@ module Zek; class << self
 
     s.to_s.match?(UUID_REX)
   end
+  alias uuid? is_uuid?
 
   def uuid_to_time(u)
 
