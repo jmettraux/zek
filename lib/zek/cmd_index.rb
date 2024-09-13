@@ -251,6 +251,10 @@ module Zek::CmdIndex; class << self
 
       li = d[:links].count { |rel, href| ! %w[ parent self ].include?(rel) }
 
+      t = trails
+        .find { |t| t.find { |u0, _, u1| u0 == u || u1 == u } }
+      t = t && t.first.first
+
       summaries[u] = {
         title: d[:title],
         line: d[:line],
@@ -262,7 +266,8 @@ module Zek::CmdIndex; class << self
         parent: parents[u],
         children: children[u] || [],
         attcs: d[:attcs].size,
-        links: li }
+        links: li,
+        trail: t }
     end
 
     summaries = sort_index_hash(summaries)
