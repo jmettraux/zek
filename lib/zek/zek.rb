@@ -51,6 +51,11 @@ module Zek; class << self
         path(aa, bb, fn) }
   end
 
+  def note_path(u)
+
+    Dir[uuid_to_path(u, "#{u}_*.md")].first
+  end
+
   def stop_words
 
     $stop_words ||= (
@@ -115,7 +120,7 @@ module Zek; class << self
 
       u = _uuid
 
-      return u if Dir[uuid_to_path(u, "n_#{u}_*.md")].empty?
+      return u if Dir[uuid_to_path(u, "#{u}_*.md")].empty?
     end
 
     fail "couldn't find a free UUIDv7 :-("

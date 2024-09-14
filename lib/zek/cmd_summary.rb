@@ -20,6 +20,6 @@ pp trees
     #end
   end
 
-  protected # beware, it's Zek/self here...
+  protected
 end; end
 

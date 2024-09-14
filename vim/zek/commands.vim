@@ -36,6 +36,19 @@ function! s:ZekRun(cmd, args, lines)
 endfunction " ZekRunAndRead
 
 
+function! s:ZekOpenNote()
+
+  let l = getline('.')
+  let m = matchlist(l, '\v [0-9a-f]{32} ')
+  if empty(m) == 1 | return | endif
+  let u = trim(m[0])
+  let car = <SID>ZekRun('path ' . u, [], [])
+  if empty(car[1]) | return | endif
+  execute 'edit ' . car[1]
+
+endfunction " ZekOpenNote
+
+
 function! ZekNtr(s)
 
   return substitute(a:s, '[^a-zA-Z0-9]', '_', 'g')
@@ -88,7 +101,7 @@ function! s:ZekTrees(...)
 
   if car[0] != 0 | return | endif
 
-  let fn = '_zktr___' . JmNtr(join(a:000, '_'))
+  let fn = '_zktr___' . ZekNtr(join(a:000, '_'))
   let bn = JmBufferNumber(fn)
 
   if bn > -1 | exe '' . bn . 'bwipeout!' | endif
@@ -104,13 +117,13 @@ function! s:ZekTrees(...)
   setlocal noswapfile
   setlocal cursorline
 
-  put= car[1]
+  silent put= car[1]
 
   "normal 1G
   setlocal syntax=zektree
   setlocal nomodifiable
 
-"  nnoremap <buffer> o :call JmOpenTreeFile()<CR>
+  nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
 "  nnoremap <buffer> e :call JmOpenTreeFile('edit')<CR>
 "  nnoremap <buffer> <space> :call JmOpenTreeFile()<CR>
 "  nnoremap <buffer> <CR> :call JmOpenTreeFile()<CR>

@@ -212,5 +212,28 @@ describe Zek do
       ])
     end
   end
+
+  describe 'note_path(uuid)' do
+
+    it 'returns nil if there is no note with the given uuid' do
+
+      expect(Zek.note_path('gggggggggggggggggggggggggggggggg')).to eq(nil)
+    end
+
+    it 'returns the path to the note if it exists' do
+
+      f = Dir['spec/repo/**/*.md'].first
+      u = Zek.extract_uuid(f)
+
+      f = Zek.note_path(u)
+
+      a = u[u[-2, 2]]
+      b = u[u[-4, 2]]
+      i = f.index('/' + a)
+      f = f[i..-1]
+
+      expect(f.start_with?("/#{a}/#{b}/#{u}_")).to eq(true)
+    end
+  end
 end
 
