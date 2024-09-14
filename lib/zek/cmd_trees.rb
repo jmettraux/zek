@@ -21,9 +21,10 @@ module Zek::CmdTrees; class << self
 
     nd = summaries[node[0]]
 
-    s =
+    s = (
       '  ' * depth +
       "/ #{nd[:title]} | #{node[0]} #{nd[:size]} #{nd[:lines]}l | #{nd[:line]}"
+        ).rstrip
 
     s = s[0, COLS - 1] + '…' if s.length > COLS
 
