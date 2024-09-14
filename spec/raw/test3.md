@@ -10,5 +10,7 @@ This is note test 3
 
 Le Meunier, son Fils et l’Ane
 
+[side](kanq)
+
 <!-- foo: bar -->
 

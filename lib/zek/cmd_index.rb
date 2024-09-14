@@ -202,6 +202,24 @@ module Zek::CmdIndex; class << self
     write_index(:nets, nets)
 
     #
+    # trails, rel -> [ [ uuid0, uuid1, ... ], ... ]
+
+    trails = edges
+      .inject({}) { |h, (u0, rel, u1)|
+        ts = (h[rel] ||= [])
+        t = ts.find { |t| t.include?(u0) || t.include?(u1) }
+        if ! t; t = []; ts << t; end
+        t << u0
+        t << u1 if Zek.uuid?(u1)
+        h }
+      .inject({}) { |h, (k, v)|
+        h[k] = v.collect { |a| a.uniq.sort }
+        h }
+#puts "trails:"; pp trails
+
+    write_index(:trails, trails)
+
+    #
     # summaries
 
     compute_root_and_depth = lambda { |u|
@@ -231,6 +249,12 @@ module Zek::CmdIndex; class << self
       n = nets .find { |n| n.include?(u) }
       n = n ? n.first : nil
 
+      ts = trails
+        .inject([]) { |a, (rel, trails)|
+          t = trails.find { |tt| tt.include?(u) }
+          a << [ rel, t.first ] if t
+          a }
+
       summaries[u] = {
         title: d[:title],
         line: d[:line],
@@ -243,17 +267,14 @@ module Zek::CmdIndex; class << self
         children: children[u] || [],
         attcs: d[:attcs].size,
         links: li,
-        net: n }
+        net: n,
+        trails: ts }
     end
 
     summaries = sort_index_hash(summaries)
 #puts "summaries:"; pp summaries
 
     write_index(:summaries, summaries)
-  end
-
-  def combine_trails(edges)
-
   end
 
   def sort_index_hash(h)
