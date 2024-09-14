@@ -292,6 +292,9 @@ module Zek; class << self
     d = File.exist?(patr) && (Marshal.load(File.read(patr)) rescue nil)
     d = d || (File.exist?(paty) && YAML.load_file(paty) rescue nil)
 
+    fail("Cannot find #{paty}, check $ZEK_REPO_PATH #{Zek.repo_path}") \
+      unless d
+
     d
   end
 end; end
