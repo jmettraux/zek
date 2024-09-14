@@ -185,7 +185,7 @@ module Zek::CmdIndex; class << self
     write_index(:trees, trees1)
 
     #
-    # trails
+    # nets
 
     edges = links.values
       .flatten(1)
@@ -195,7 +195,7 @@ module Zek::CmdIndex; class << self
 
     m = lambda { |e0, e1| i = e0 & e1; !! i.find { |e| Zek.uuid?(e) } }
 
-    trails = edges
+    nets = edges
       .inject([]) { |a, e|
         if trail = a.find { |t| t.find { |ee| m[ee, e] } }
           trail << e
@@ -203,11 +203,11 @@ module Zek::CmdIndex; class << self
           a << [ e ]
         end
         a }
-      .each { |t|
-        t.sort_by!(&:first) }
-#puts "trails:"; trails.each { |t| pp t }
+      .collect { |n|
+        n.flatten(1).uniq.select { |e| Zek.uuid?(e) }.sort }
+#puts "nets:"; nets.each { |t| pp t }
 
-    write_index(:trails, trails)
+    write_index(:nets, nets)
 
     #
     # summaries
@@ -236,9 +236,8 @@ module Zek::CmdIndex; class << self
 
       li = d[:links].count { |rel, href| ! %w[ parent self ].include?(rel) }
 
-      t = trails
-        .find { |t| t.find { |u0, _, u1| u0 == u || u1 == u } }
-      t = t && t.first.first
+      n = nets .find { |n| n.include?(u) }
+      n = n ? n.first : nil
 
       summaries[u] = {
         title: d[:title],
@@ -252,7 +251,7 @@ module Zek::CmdIndex; class << self
         children: children[u] || [],
         attcs: d[:attcs].size,
         links: li,
-        trail: t }
+        net: n }
     end
 
     summaries = sort_index_hash(summaries)
