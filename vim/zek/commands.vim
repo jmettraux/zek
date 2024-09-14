@@ -52,7 +52,7 @@ endfunction " ZekOpenNote
 
 function! s:ZekOpenRoot()
 
-  if exists('*JmShowStree')
+  if exists('*JmShowTree')
     call JmShowTree($ZEK_REPO_PATH)
   else
     edit $ZEK_REPO_PATH
