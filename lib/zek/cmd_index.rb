@@ -98,9 +98,9 @@ module Zek::CmdIndex; class << self
     titles = {}
     words = {}
     tags = {}
-    links = {}
     parents = {}
     children = {}
+    edges = []
 
     Dir[Zek.path('*/*/*.md')].each do |path|
 
@@ -129,9 +129,7 @@ module Zek::CmdIndex; class << self
           (children[pu] ||= []) << u
         else
           hu = reself[href] || href
-          a = [ u, rel, hu ]; a << href if href != hu
-          (links[rel] ||= []) << a
-          (links[href] ||= []) << a
+          edges << [ u, rel, hu ]
         end
       end
     end
@@ -142,17 +140,17 @@ module Zek::CmdIndex; class << self
 #puts "words:"; pp words
     tags = sort_index_hash(tags)
 #puts "tags:"; pp tags
-    links = sort_index_hash(links)
-#puts "links:"; pp links
     parents = sort_index_hash(parents)
 #puts "parents:"; pp parents
     children = sort_index_hash(children)
 #puts "children:"; pp children
+    edges = edges.sort_by(&:first)
+#puts "edges:"; pp edges
 
     write_index(:titles, titles)
     write_index(:words, words)
     write_index(:tags, tags)
-    write_index(:links, links)
+    write_index(:edges, edges)
     write_index(:parents, parents)
     write_index(:children, children)
 
@@ -187,12 +185,6 @@ module Zek::CmdIndex; class << self
     #
     # nets
 
-    edges = links.values
-      .flatten(1)
-      .collect { |src, rel, dst, _| Zek.uuid?(dst) ? [ src, rel, dst ] : nil }
-      .compact
-      .uniq
-
     m = lambda { |e0, e1| i = e0 & e1; !! i.find { |e| Zek.uuid?(e) } }
 
     nets = edges
@@ -205,7 +197,7 @@ module Zek::CmdIndex; class << self
         a }
       .collect { |n|
         n.flatten(1).uniq.select { |e| Zek.uuid?(e) }.sort }
-#puts "nets:"; nets.each { |t| pp t }
+#puts "nets:"; pp nets
 
     write_index(:nets, nets)
 
