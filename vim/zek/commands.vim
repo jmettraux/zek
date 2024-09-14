@@ -16,24 +16,6 @@ function! s:ZekGreenEcho(...)
 endfunction
 
 
-function! s:ZekRun(cmd, args, lines)
-
-  let cmd = a:cmd . ' ' . join(a:args, ' ')
-
-  let s = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
-  let s = trim(s)
-
-  let e = v:shell_error
-
-  if e != 0
-    call <SID>ZekRedEcho("exit code " . e)
-    call <SID>ZekRedEcho("  |")
-    call <SID>ZekRedEcho(s)
-  endif
-
-  return [ e, s ]
-
-endfunction " ZekRunAndRead
 
 
 function! s:ZekOpenNote()
@@ -42,11 +24,7 @@ function! s:ZekOpenNote()
   let m = matchlist(l, '\v [0-9a-f]{32} ')
   if empty(m) == 1 | return | endif
 
-  let u = trim(m[0])
-  let car = <SID>ZekRun('path ' . u, [], [])
-  if empty(car[1]) | return | endif
-
-  execute 'edit ' . car[1]
+  call ZekOpenLink(m[0])
 endfunction " ZekOpenNote
 
 
@@ -65,14 +43,38 @@ function! ZekNtr(s)
   return substitute(a:s, '[^a-zA-Z0-9]', '_', 'g')
 endfunction " ZekNtr
 
+
 "
 " ~public~
 
-"
-"  * note trees
-"  * note lists
-"  * note
-"
+function! ZekRun(cmd, args, lines)
+
+  let cmd = a:cmd . ' ' . join(a:args, ' ')
+
+  let s = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
+  let s = trim(s)
+
+  let e = v:shell_error
+
+  if e != 0
+    call <SID>ZekRedEcho("exit code " . e)
+    call <SID>ZekRedEcho("  |")
+    call <SID>ZekRedEcho(s)
+  endif
+
+  return [ e, s ]
+
+endfunction " ZekRun
+
+
+function! ZekOpenLink(s)
+
+  let car = ZekRun('path ' . trim(a:s), [], [])
+  if empty(car[1]) | return | endif
+
+  execute 'edit ' . car[1]
+endfunction " ZekOpenLink
+
 
 " Create a new note
 "
@@ -80,7 +82,7 @@ function! s:ZekMake() range
 
   let ls = getline(a:firstline, a:lastline)
 
-  let car = <SID>ZekRun('make', [], ls)
+  let car = ZekRun('make', [], ls)
 
   if car[0] == 0
     call <SID>ZekGreenEcho("Added note " . car[1])
@@ -94,7 +96,7 @@ function! s:ZekTrees(...)
 
   if &mod == 1 | echoerr "Current buffer has unsaved changes." | return | endif
 
-  let car = <SID>ZekRun('trees', a:000, [])
+  let car = ZekRun('trees', a:000, [])
 
   if car[0] != 0 | return | endif
 
@@ -132,22 +134,11 @@ endfunction " ZekTrees
 command! -nargs=* ZekTrees :call <SID>ZekTrees(<f-args>)
 
 
-" Fetch a list of notes
-"
-function! s:ZekList(flavour)
-
-  let car = <SID>ZekRun('list ' . a:flavour, [])
-
-endfunction " ZekList
-
-command! -nargs=* ZekList :call <SID>ZekList(<f-args>)
-
-
 " Trigger Zek indexation of the repository
 "
 function! s:ZekIndex()
 
-  let car = <SID>ZekRun('index', [])
+  let car = ZekRun('index', [])
 
 endfunction " ZekIndex
 
