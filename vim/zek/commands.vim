@@ -41,12 +41,23 @@ function! s:ZekOpenNote()
   let l = getline('.')
   let m = matchlist(l, '\v [0-9a-f]{32} ')
   if empty(m) == 1 | return | endif
+
   let u = trim(m[0])
   let car = <SID>ZekRun('path ' . u, [], [])
   if empty(car[1]) | return | endif
-  execute 'edit ' . car[1]
 
+  execute 'edit ' . car[1]
 endfunction " ZekOpenNote
+
+
+function! s:ZekOpenRoot()
+
+  if exists('*JmShowStree')
+    call JmShowTree($ZEK_REPO_PATH)
+  else
+    edit $ZEK_REPO_PATH
+  endif
+endfunction " ZekOpenRoot
 
 
 function! ZekNtr(s)
@@ -78,20 +89,6 @@ endfunction " ZekMake
 
 vnoremap zz :call <SID>ZekMake()
 
-
-" Fetch one note
-"
-function! s:ZekFetch(...)
-
-  " TODO
-  echo a:000
-  "for arg in a:000
-  "  echo arg
-  "endfor
-
-endfunction " ZekFetch
-
-command! -nargs=* ZekFetch :call <SID>ZekFetch(<f-args>)
 
 function! s:ZekTrees(...)
 
@@ -127,6 +124,8 @@ function! s:ZekTrees(...)
 "  nnoremap <buffer> e :call JmOpenTreeFile('edit')<CR>
 "  nnoremap <buffer> <space> :call JmOpenTreeFile()<CR>
 "  nnoremap <buffer> <CR> :call JmOpenTreeFile()<CR>
+
+  nnoremap <buffer> R :call <SID>ZekOpenRoot()<CR>
 
 endfunction " ZekTrees
 
