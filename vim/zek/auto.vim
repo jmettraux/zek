@@ -2,7 +2,7 @@
 "
 " zek/auto.vim
 
-" place here autocommands for when opening notes and list of notes...
+" autocmd at the bottom of the file...
 
 function! s:ZekFollowLink()
 
@@ -14,9 +14,22 @@ function! s:ZekFollowLink()
   endif
 endfunction " ZekFollowLink
 
+
+function! s:ZekGoTrees()
+
+  if bufexists("_zktr___")
+    edit _zktr___
+  else
+    exe ":ZekTrees"
+  endif
+endfunction " ZekGoTrees
+
+
 function! s:OnZekNote()
 
   nnoremap <buffer> gg :call <SID>ZekFollowLink()<CR>
+  "nnoremap <buffer> T :ZekTrees<CR>
+  nnoremap <buffer> T :call <SID>ZekGoTrees()<CR>
 endfunction " onZekNote
 
 autocmd BufRead $ZEK_REPO_PATH/*/*/*.md call <SID>OnZekNote()
