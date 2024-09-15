@@ -3,7 +3,7 @@
 " zek/commands.vim
 
 "
-" ~protected~
+" ~protected~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 highlight ZekRedEchoHighlight ctermfg=red ctermbg=none
 highlight ZekGreenEchoHighlight ctermfg=green ctermbg=none
@@ -16,8 +16,6 @@ function! s:ZekGreenEcho(...)
 endfunction
 
 
-
-
 function! s:ZekOpenNote()
 
   let l = getline('.')
@@ -26,6 +24,19 @@ function! s:ZekOpenNote()
 
   call ZekOpenLink(m[0])
 endfunction " ZekOpenNote
+
+
+function! s:ZekMakeChildNote()
+
+  let l = getline('.')
+  let m = matchlist(l, '\v [0-9a-f]{32} ')
+  if empty(m) == 1 | return | endif
+
+  let car = ZekRun(
+    \ 'make', [], [ "[parent](" . trim(m[0]) . ")", "", "# new note", ""])
+
+  if car[0] == 0 | call ZekOpenLink(car[1]) | endif
+endfunction " ZekMakeChildNote
 
 
 function! s:ZekOpenRoot()
@@ -45,7 +56,7 @@ endfunction " ZekNtr
 
 
 "
-" ~public~
+" ~public~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function! ZekRun(cmd, args, lines)
 
@@ -78,7 +89,7 @@ endfunction " ZekOpenLink
 
 " Create a new note
 "
-function! s:ZekMake() range
+function! s:ZekMakeNote() range
 
   let ls = getline(a:firstline, a:lastline)
 
@@ -87,9 +98,9 @@ function! s:ZekMake() range
   if car[0] == 0
     call <SID>ZekGreenEcho("Added note " . car[1])
   endif
-endfunction " ZekMake
+endfunction " ZekMakeNote
 
-vnoremap zz :call <SID>ZekMake()
+vnoremap zz :call <SID>ZekMakeNote()
 
 
 function! s:ZekTrees(...)
@@ -123,11 +134,15 @@ function! s:ZekTrees(...)
   setlocal nomodifiable
 
   nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
-"  nnoremap <buffer> e :call JmOpenTreeFile('edit')<CR>
-"  nnoremap <buffer> <space> :call JmOpenTreeFile()<CR>
-"  nnoremap <buffer> <CR> :call JmOpenTreeFile()<CR>
+  nnoremap <buffer> <CR> :call <SID>ZekOpenNote()<CR>
+  "nnoremap <buffer> e :call JmOpenTreeFile('edit')<CR>
+  "nnoremap <buffer> <space> :call JmOpenTreeFile()<CR>
 
   nnoremap <buffer> R :call <SID>ZekOpenRoot()<CR>
+  nnoremap <buffer> c :call <SID>ZekMakeChildNote()<CR>
+
+  nnoremap <buffer> r :ZekTrees<CR>
+  nnoremap <buffer> i :ZekIndex<CR>
 
 endfunction " ZekTrees
 
@@ -138,7 +153,11 @@ command! -nargs=* ZekTrees :call <SID>ZekTrees(<f-args>)
 "
 function! s:ZekIndex()
 
-  let car = ZekRun('index', [])
+  let car = ZekRun('index', [], [])
+
+  if car[0] == 0
+    call <SID>ZekGreenEcho("Indexed " . $ZEK_REPO_PATH)
+  endif
 
 endfunction " ZekIndex
 
