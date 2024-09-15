@@ -39,6 +39,15 @@ function! s:ZekMakeChildNote()
 endfunction " ZekMakeChildNote
 
 
+function! s:ZekPrepChildNote()
+
+  let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
+  if empty(m) == 1 | return | endif
+
+  call <SID>ZekPrepNote(m[1])
+endfunction " ZekPrepChildNote
+
+
 function! s:ZekOpenRoot()
 
   if exists('*JmShowTree')
@@ -49,14 +58,42 @@ function! s:ZekOpenRoot()
 endfunction " ZekOpenRoot
 
 
+function! s:ZekWriteNote()
+
+  let car = ZekRun('make', [], getline(1, '$'))
+
+  if car[0] != 0 | return | endif
+
+  execute "bdelete!"
+endfunction " ZekWriteNote
+
+
+function! s:ZekPrepNote(u)
+
+  exe 'new | only'
+  setlocal syntax=markdown
+
+  if strlen(a:u) == 32
+    exe "normal! i" . "[parent](" . a:u . ")"
+  endif
+  exe "normal! o## New NoteLore ipsum..."
+  exe "normal! kkk0lll"
+
+  nnoremap <buffer> q :bdelete!<CR>
+  nnoremap <buffer> w :call <SID>ZekWriteNote()<CR>
+
+endfunction " ZekPrepNote
+
+
+"
+" ~public~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 function! ZekNtr(s)
 
   return substitute(a:s, '[^a-zA-Z0-9]', '_', 'g')
 endfunction " ZekNtr
 
-
-"
-" ~public~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function! ZekRun(cmd, args, lines)
 
@@ -139,7 +176,9 @@ function! s:ZekTrees(...)
   "nnoremap <buffer> <space> :call JmOpenTreeFile()<CR>
 
   nnoremap <buffer> R :call <SID>ZekOpenRoot()<CR>
-  nnoremap <buffer> c :call <SID>ZekMakeChildNote()<CR>
+  "nnoremap <buffer> c :call <SID>ZekMakeChildNote()<CR>
+  nnoremap <buffer> c :call <SID>ZekPrepChildNote()<CR>
+  nnoremap <buffer> a :call <SID>ZekPrepNote('')<CR>
 
   nnoremap <buffer> r :ZekTrees<CR>
   nnoremap <buffer> i :ZekIndex<CR>
