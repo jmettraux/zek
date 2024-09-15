@@ -7,7 +7,7 @@ module Zek::CmdImport; class << self
   def execute(args, lines)
 
     from_dir = args.shift
-    args << :import
+    #args << :import
 
     Dir[File.join(from_dir, '*.md')].each do |path|
 
