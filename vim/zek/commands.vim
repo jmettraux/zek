@@ -79,8 +79,11 @@ function! s:ZekPrepNote(u)
   exe "normal! o## New NoteLore ipsum..."
   exe "normal! kkk0lll"
 
-  nnoremap <buffer> q :bdelete!<CR>
-  nnoremap <buffer> w :call <SID>ZekWriteNote()<CR>
+  nnoremap <buffer> qq :bdelete!<CR>
+  nnoremap <buffer> ww :call <SID>ZekWriteNote()<CR>
+
+  "autocmd BufWritePre <buffer> call <SID>ZekWriteNote()
+    " meh...
 
 endfunction " ZekPrepNote
 
