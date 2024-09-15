@@ -6,8 +6,11 @@ module Zek; class << self
 
   def repo_path
 
-    ENV['ZEK_REPO_PATH'] ||
-    fail('Please set $ZEK_REPO_PATH env var')
+    $zek_repo_path ||=
+      File.absolute_path(
+        ENV['ZEK_REPO_PATH'] ||
+        lookup_zek_repo_path ||
+        fail('Please set $ZEK_REPO_PATH env var'))
   end
 
   def repo_path_a
@@ -315,6 +318,22 @@ module Zek; class << self
       unless d
 
     d
+  end
+
+  protected
+
+  def lookup_zek_repo_path(dir=Dir.pwd)
+
+    return nil if dir == '/home' || dir == '/'
+
+    %w[ .zek-repo-path .zek_repo_path ].each do |fn|
+
+      path = File.join(dir, fn); next unless File.exist?(path)
+      repo = File.read(path).strip
+      return File.absolute_path?(repo) ? repo : File.join(dir, repo)
+    end
+
+    lookup_zek_repo_path(File.dirname(dir))
   end
 end; end
 
