@@ -145,7 +145,7 @@ module Zek::CmdIndex; class << self
     tags = sort_index_hash(tags)
 #puts "tags:"; pp tags
     parents = sort_index_hash(parents)
-puts "parents:"; pp parents
+#puts "parents:"; pp parents
     children = sort_index_hash(children)
 #puts "children:"; pp children
     edges = edges.sort_by(&:first)
