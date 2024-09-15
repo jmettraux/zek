@@ -56,6 +56,11 @@ module Zek; class << self
     Dir[uuid_to_path(u, "#{u}_*.md")].first
   end
 
+  def note_files(u)
+
+    Dir[uuid_to_path(u, "#{u}_*.{md,rb,yaml}")]
+  end
+
   def stop_words
 
     $stop_words ||= (

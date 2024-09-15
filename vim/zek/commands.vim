@@ -18,8 +18,7 @@ endfunction
 
 function! s:ZekOpenNote()
 
-  let l = getline('.')
-  let m = matchlist(l, '\v [0-9a-f]{32} ')
+  let m = matchlist(getline('.'), '\v [0-9a-f]{32} ')
   if empty(m) == 1 | return | endif
 
   call ZekOpenLink(m[0])
@@ -46,6 +45,21 @@ function! s:ZekPrepChildNote()
 
   call <SID>ZekPrepNote(m[1])
 endfunction " ZekPrepChildNote
+
+
+function! s:ZekDeleteNote()
+
+  let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
+  if empty(m) == 1 | return | endif
+
+  if confirm('Delete note ' . m[1] . ' ?', "&No\n&yes") == 1 | return 0 | endif
+
+  let car = ZekRun('delete', [ m[1] ], [])
+
+  if car[0] == 0
+    call <SID>ZekGreenEcho("deleted note " . m[1])
+  endif
+endfunction " ZekDeleteNote
 
 
 function! s:ZekOpenRoot()
@@ -186,6 +200,7 @@ function! s:ZekTrees(...)
   nnoremap <buffer> r :ZekTrees<CR>
   nnoremap <buffer> i :ZekIndex<CR>
 
+  nnoremap <buffer> D :call <SID>ZekDeleteNote()<CR>
 endfunction " ZekTrees
 
 command! -nargs=* ZekTrees :call <SID>ZekTrees(<f-args>)
@@ -200,7 +215,6 @@ function! s:ZekIndex()
   if car[0] == 0
     call <SID>ZekGreenEcho("Indexed " . $ZEK_REPO_PATH . " took " . car[1])
   endif
-
 endfunction " ZekIndex
 
 command! -nargs=0 ZekIndex :call <SID>ZekIndex()
