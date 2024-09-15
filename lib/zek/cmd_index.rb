@@ -7,10 +7,14 @@ module Zek::CmdIndex; class << self
 
   def execute(args, lines)
 
+    t0 = Zek.monow
+
     ensure_stop_words
 
     index_each_file
     index_all_files
+
+    puts "#{Zek.monow - t0}s"
   end
 
   protected

@@ -156,7 +156,7 @@ function! s:ZekIndex()
   let car = ZekRun('index', [], [])
 
   if car[0] == 0
-    call <SID>ZekGreenEcho("Indexed " . $ZEK_REPO_PATH)
+    call <SID>ZekGreenEcho("Indexed " . $ZEK_REPO_PATH . " took " . car[1])
   endif
 
 endfunction " ZekIndex
