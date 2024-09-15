@@ -144,9 +144,9 @@ module Zek::CmdIndex; class << self
 #puts "words:"; pp words
     tags = sort_index_hash(tags)
 #puts "tags:"; pp tags
-    parents = sort_index_hash(parents)
+    #parents = sort_index_hash(parents)
 #puts "parents:"; pp parents
-    children = sort_index_hash(children)
+    #children = sort_index_hash(children)
 #puts "children:"; pp children
     edges = edges.sort_by(&:first)
 #puts "edges:"; pp edges
@@ -155,8 +155,8 @@ module Zek::CmdIndex; class << self
     write_index(:words, words)
     write_index(:tags, tags)
     write_index(:edges, edges)
-    write_index(:parents, parents)
-    write_index(:children, children)
+    #write_index(:parents, parents)
+    #write_index(:children, children)
 
     #
     # trees
