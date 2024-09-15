@@ -7,7 +7,7 @@ module Zek::CmdPath; class << self
 
   def execute(args, lines)
 
-    puts Zek.note_path(args.first)
+    puts Zek.note_path(Zek.lookup_uuid(args.first))
   end
 
   protected

@@ -150,6 +150,15 @@ module Zek; class << self
     t.dup.utc.strftime('%Y-%m-%dT%H:%M:%S.%LZ')
   end
 
+  def lookup_uuid(u_or_self)
+
+    return u_or_self if uuid?(u_or_self)
+
+    selves = load_index('selves')
+
+    (selves[u_or_self] || []).first
+  end
+
   def extract_hash_title(lines)
 
     lines.each do |l|
