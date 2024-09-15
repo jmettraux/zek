@@ -67,12 +67,16 @@ module Zek::CmdIndex; class << self
 
   def index_all_files
 
+    mds = Dir[Zek.path('*/*/*.md')]
+
+    uuids = mds.collect { |pa| Zek.extract_uuid(pa) }
+
     #
     # make a first pass to index "selves", aka "self" links, aliases to oneself
 
     selves = sort_index_hash(
 
-      Dir[Zek.path('*/*/*.md')].inject({}) { |h, path|
+      mds.inject({}) { |h, path|
 
         u = Zek.extract_uuid(path)
         d = Zek.load_index(u)
@@ -82,7 +86,7 @@ module Zek::CmdIndex; class << self
           next unless rel == 'self'
 
           unless Zek.is_uuid?(href)
-            (h[u] ||= []) << href
+            #(h[u] ||= []) << href
             (h[href] ||= []) << u
           end
         end
@@ -98,7 +102,6 @@ module Zek::CmdIndex; class << self
     #
     # do the main indexing
 
-    uuids = []
     titles = {}
     words = {}
     tags = {}
@@ -106,12 +109,9 @@ module Zek::CmdIndex; class << self
     children = {}
     edges = []
 
-    Dir[Zek.path('*/*/*.md')].each do |path|
+    mds.each do |path|
 
       u = Zek.extract_uuid(path)
-
-      uuids << u
-
       d = Zek.load_index(u)
 
       unless d
@@ -145,7 +145,7 @@ module Zek::CmdIndex; class << self
     tags = sort_index_hash(tags)
 #puts "tags:"; pp tags
     parents = sort_index_hash(parents)
-#puts "parents:"; pp parents
+puts "parents:"; pp parents
     children = sort_index_hash(children)
 #puts "children:"; pp children
     edges = edges.sort_by(&:first)
@@ -161,30 +161,29 @@ module Zek::CmdIndex; class << self
     #
     # trees
 
+    #missing_parents = []
+
+      # [ uuid, parent_uuid, [ child0, child1, ... ] ]
+      #
     nodes = uuids
       .sort
-      .inject({}) { |h, u| h[u] = [ u, [] ]; h }
+      .inject({}) { |h, u| h[u] = [ u, parents[u], [] ]; h }
         #
     children.each { |u, cn|
-      n = nodes[u]
-      cn.each { |cu| n[1] << nodes[cu] } }
+      if n = nodes[u]
+        cn.each { |cu| n[2] << nodes[cu] }
+      else
+        #missing_parents << u
+      end }
 #puts; puts "nodes:"; pp nodes
+#puts; puts "missing_parents:"; pp missing_parents
 
-    pks = parents.keys
-    trees = nodes.values.reject { |u, cn| pks.include?(u) }
-#puts "trees:"; trees.each { |t| pp t }
+    #pks = parents.keys
+    #trees = nodes.values.reject { |u, pu, cn| pks.include?(u) }
+    trees = nodes.values.select { |u, pu, cn| pu.nil? || ! uuids.include?(pu) }
+#puts; puts "trees:"; trees.each { |t| pp t }
 
-    deself = lambda { |n|
-      u0, cn = n
-      u1 = selves[u0]; u1 = u1 ? u1.first : nil
-      [ u0, u1, cn.collect { |c| deself[c] } ] }
-
-    trees1 = trees
-      .collect { |n| deself[n] }
-#puts "trees1:"; trees1.each { |t| pp t }
-
-    #write_index(:trees, trees)
-    write_index(:trees, trees1)
+    write_index(:trees, trees)
 
     #
     # nets
@@ -229,7 +228,7 @@ module Zek::CmdIndex; class << self
     compute_root_and_depth = lambda { |u|
       compute_ = lambda { |d, n|
         return d if n[0] == u
-        n[1].each { |nn|
+        n[2].each { |nn|
           dd = compute_[d + 1, nn]
           return dd if dd }
         nil }
@@ -241,7 +240,7 @@ module Zek::CmdIndex; class << self
 
     summaries = {}
 
-    Dir[Zek.path('*/*/*.md')].each do |path|
+    mds.each do |path|
 
       u = Zek.extract_uuid(path)
       d = Zek.load_index(u)
