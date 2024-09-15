@@ -181,7 +181,11 @@ function! s:ZekTrees(...)
   setlocal noswapfile
   setlocal cursorline
 
+  exe "normal i# " . $ZEK_REPO_PATH . " trees"
+
   silent put= car[1]
+
+  exe "normal! Go"
 
   "normal 1G
   setlocal syntax=zektree
