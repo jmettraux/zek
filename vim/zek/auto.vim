@@ -29,6 +29,16 @@ function! s:ZekGoParent()
 endfunction " ZekGoParent
 
 
+function! s:ZekGoRoot()
+
+  let car = ZekRun('root', [ expand('%:t') ], [])
+
+  if car[0] == 0
+    call ZekOpenLink(car[1])
+  endif
+endfunction " ZekGoRoot
+
+
 function! s:ZekGoTrees()
 
   if bufexists("_zktr___")
@@ -45,6 +55,7 @@ function! s:OnZekNote()
   "nnoremap <buffer> T :ZekTrees<CR>
   nnoremap <buffer> T :call <SID>ZekGoTrees()<CR>
   nnoremap <buffer> gp :call <SID>ZekGoParent()<CR>
+  nnoremap <buffer> gr :call <SID>ZekGoRoot()<CR>
 endfunction " onZekNote
 
 
