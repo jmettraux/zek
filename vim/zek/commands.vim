@@ -99,6 +99,8 @@ function! s:ZekPrepNote(u)
   "autocmd BufWritePre <buffer> call <SID>ZekWriteNote()
     " meh...
 
+  "call <SID>ZekGreenEcho("ww to save, qq to cancel...")
+
 endfunction " ZekPrepNote
 
 
