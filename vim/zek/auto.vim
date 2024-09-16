@@ -15,6 +15,20 @@ function! s:ZekFollowLink()
 endfunction " ZekFollowLink
 
 
+function! s:ZekGoParent()
+
+  for i in range(1, line('$'))
+    let l = getline(i)
+    let m = matchlist(getline(i), '\v\[parent\]\(([^)]+)\)')
+    if ! empty(m)
+      call ZekOpenLink(m[1])
+      return
+    endif
+  endfor
+  echo "no parent for this note"
+endfunction " ZekGoParent
+
+
 function! s:ZekGoTrees()
 
   if bufexists("_zktr___")
@@ -30,6 +44,7 @@ function! s:OnZekNote()
   nnoremap <buffer> gg :call <SID>ZekFollowLink()<CR>
   "nnoremap <buffer> T :ZekTrees<CR>
   nnoremap <buffer> T :call <SID>ZekGoTrees()<CR>
+  nnoremap <buffer> gp :call <SID>ZekGoParent()<CR>
 endfunction " onZekNote
 
 
