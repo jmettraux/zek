@@ -329,7 +329,12 @@ module Zek; class << self
     %w[ .zek-repo-path .zek_repo_path ].each do |fn|
 
       path = File.join(dir, fn); next unless File.exist?(path)
-      repo = File.read(path).strip
+
+      repo = File.readlines(path)
+        .collect(&:strip)
+        .select { |l| l.match?(/^[^#].+/) }
+        .first
+
       return File.absolute_path?(repo) ? repo : File.join(dir, repo)
     end
 

@@ -65,9 +65,9 @@ endfunction " ZekDeleteNote
 function! s:ZekOpenRoot()
 
   if exists('*JmShowTree')
-    call JmShowTree($ZEK_REPO_PATH)
+    call JmShowTree(ZekRepoPath())
   else
-    edit $ZEK_REPO_PATH
+    edit ZekRepoPath()
   endif
 endfunction " ZekOpenRoot
 
@@ -132,6 +132,14 @@ function! ZekRun(cmd, args, lines)
 endfunction " ZekRun
 
 
+function! ZekRepoPath()
+
+  let car = ZekRun('repo', [], [])
+
+  return car[0] == 0 ? car[1] : ""
+endfunction " ZekRepoPath
+
+
 function! ZekOpenLink(s)
 
   let car = ZekRun('path ' . trim(a:s), [], [])
@@ -181,7 +189,7 @@ function! s:ZekTrees(...)
   setlocal noswapfile
   setlocal cursorline
 
-  exe "normal i# " . $ZEK_REPO_PATH . " trees"
+  exe "normal i# " . ZekRepoPath() . " trees"
 
   silent put= car[1]
 
@@ -217,7 +225,7 @@ function! s:ZekIndex()
   let car = ZekRun('index', [], [])
 
   if car[0] == 0
-    call <SID>ZekGreenEcho("Indexed " . $ZEK_REPO_PATH . " took " . car[1])
+    call <SID>ZekGreenEcho("Indexed " . ZekRepoPath() . " took " . car[1])
   endif
 endfunction " ZekIndex
 
