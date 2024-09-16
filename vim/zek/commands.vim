@@ -106,12 +106,6 @@ endfunction " ZekPrepNote
 " ~public~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-function! ZekNtr(s)
-
-  return substitute(a:s, '[^a-zA-Z0-9]', '_', 'g')
-endfunction " ZekNtr
-
-
 function! ZekRun(cmd, args, lines)
 
   let cmd = a:cmd . ' ' . join(a:args, ' ')
