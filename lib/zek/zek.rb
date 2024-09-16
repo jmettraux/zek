@@ -332,7 +332,7 @@ module Zek; class << self
 
       repo = File.readlines(path)
         .collect(&:strip)
-        .select { |l| l.match?(/^[^#].+/) }
+        .select { |l| l.length > 0 && ! l.start_with?('#') }
         .first
 
       return File.absolute_path?(repo) ? repo : File.join(dir, repo)
