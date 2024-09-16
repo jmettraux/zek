@@ -6,7 +6,7 @@
 
 function! ZekFileJoin(...)
 
-  return substitute(join(a:000, '/'), '/\+', '/', 'g')
+  return substitute(join(a:000, '/'), '\v/+', '/', 'g')
 endfunction " ZekFileJoin
 
 
