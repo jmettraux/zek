@@ -308,16 +308,15 @@ module Zek; class << self
       else
         path('index', path)
       end
+
+    return nil unless pat
+
     patr, paty =
       pat + '.rb', pat + '.yaml'
 
-    d = File.exist?(patr) && (Marshal.load(File.read(patr)) rescue nil)
-    d = d || (File.exist?(paty) && YAML.load_file(paty) rescue nil)
-
-    fail("Cannot find #{paty}, check $ZEK_REPO_PATH #{Zek.repo_path}") \
-      unless d
-
-    d
+    (File.exist?(patr) && (Marshal.load(File.read(patr)) rescue nil)) ||
+    (File.exist?(paty) && (YAML.load_file(paty) rescue nil)) ||
+    fail("Cannot find #{paty}, check $ZEK_REPO_PATH #{Zek.repo_path}")
   end
 
   def load_selves

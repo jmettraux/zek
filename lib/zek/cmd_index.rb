@@ -57,6 +57,8 @@ module Zek::CmdIndex; class << self
     d = Zek.do_index_lines(File.readlines(path))
       # which is found in lib/zek/cmd_make.rb ...
 
+    return nil if d[:attrs].include?([ 'status', 'deleted' ])
+
     File.open(ipath, 'wb') { |f| f.write(YAML.dump(d)) }
 
     rpath = ipath[0..-6] + '.rb'
@@ -67,19 +69,20 @@ module Zek::CmdIndex; class << self
 
   def index_all_files
 
-    mds = Dir[Zek.path('*/*/*.md')]
-
-    uuids = mds.collect { |pa| Zek.extract_uuid(pa) }
+    notes = Dir[Zek.path('*/*/*.md')]
+      .inject([]) { |a, path|
+        u = Zek.extract_uuid(path)
+        d = u && Zek.load_index(u)
+        a << [ path, u, d ] if d
+        a }
+#puts "notes:"; pp notes
 
     #
     # make a first pass to index "selves", aka "self" links, aliases to oneself
 
     selves = sort_index_hash(
 
-      mds.inject({}) { |h, path|
-
-        u = Zek.extract_uuid(path)
-        d = Zek.load_index(u)
+      notes.inject({}) { |h, (path, u, d)|
 
         d[:links].each do |rel, href|
 
@@ -109,15 +112,7 @@ module Zek::CmdIndex; class << self
     children = {}
     edges = []
 
-    mds.each do |path|
-
-      u = Zek.extract_uuid(path)
-      d = Zek.load_index(u)
-
-      unless d
-        puts "x  could not load index for #{path}, skipping..."
-        next
-      end
+    notes.each do |path, u, d|
 
       (titles[d[:title].downcase] ||= []) << u
 
@@ -162,6 +157,7 @@ module Zek::CmdIndex; class << self
     # trees
 
     #missing_parents = []
+    uuids = notes.collect { |_, u, _| u }
 
       # [ uuid, parent_uuid, [ child0, child1, ... ] ]
       #
@@ -240,10 +236,7 @@ module Zek::CmdIndex; class << self
 
     summaries = {}
 
-    mds.each do |path|
-
-      u = Zek.extract_uuid(path)
-      d = Zek.load_index(u)
+    notes.each do |path, u, d|
 
       ro, de = compute_root_and_depth[u]
 
