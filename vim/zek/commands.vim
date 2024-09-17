@@ -15,21 +15,23 @@ function! s:ZekGreenEcho(...)
   echohl ZekGreenEchoHighlight | echo join(a:000, ' ') | echohl None
 endfunction
 
+function! s:ZekCurrentUuid()
+
+  let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
+  return empty(m) ? '' : m[1]
+endfunction " ZekCurrentUuid
 
 function! s:ZekOpenNote()
 
-  let m = matchlist(getline('.'), '\v [0-9a-f]{32} ')
-  if empty(m) == 1 | return | endif
+  let u = <SID>ZekCurrentUuid() | if u == '' | return | endif
 
-  call ZekOpenLink(m[0])
+  call ZekOpenLink(u)
 endfunction " ZekOpenNote
 
 
 function! s:ZekMakeChildNote()
 
-  let l = getline('.')
-  let m = matchlist(l, '\v [0-9a-f]{32} ')
-  if empty(m) == 1 | return | endif
+  let u = <SID>ZekCurrentUuid() | if u == '' | return | endif
 
   let car = ZekRun(
     \ 'make', [], [ "[parent](" . trim(m[0]) . ")", "", "# new note", ""])
@@ -40,11 +42,23 @@ endfunction " ZekMakeChildNote
 
 function! s:ZekPrepChildNote()
 
-  let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
-  if empty(m) == 1 | return | endif
+  let u = <SID>ZekCurrentUuid() | if u == '' | return | endif
 
-  call <SID>ZekPrepNote(m[1])
+  call <SID>ZekPrepNote(u)
 endfunction " ZekPrepChildNote
+
+
+function! s:ZekListNoteSelections()
+
+  let a = []
+    "
+  for i in range(1, line('$'))
+    let m = matchlist(getline(i), '\v^ *\\ .+ ([0-9a-f]{32}) ')
+    if ! empty(m) | call add(a, m[1]) | endif
+  endfor
+
+  return a
+endfunction " ZekListNoteSelections()
 
 
 function! s:ZekClearNoteSelection()
@@ -75,15 +89,14 @@ endfunction " ZekTieNote
 
 function! s:ZekDeleteNote()
 
-  let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
-  if empty(m) == 1 | return | endif
+  let u = <SID>ZekCurrentUuid() | if u == '' | return | endif
 
-  if confirm('Delete note ' . m[1] . ' ?', "&No\n&yes") == 1 | return 0 | endif
+  if confirm('Delete note ' . u . ' ?', "&No\n&yes") == 1 | return 0 | endif
 
-  let car = ZekRun('delete', [ m[1] ], [])
+  let car = ZekRun('delete', [ u ], [])
 
   if car[0] == 0
-    call <SID>ZekGreenEcho("deleted note " . m[1])
+    call <SID>ZekGreenEcho("deleted note " . u)
   endif
 endfunction " ZekDeleteNote
 
