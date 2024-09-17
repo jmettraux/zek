@@ -88,15 +88,33 @@ function! s:ZekCutNote()
   if cu == su | return | endif
 
   setlocal modifiable
-  execute 's/\v^( *)\//\1\\/g'
+  execute 's/\v^( *)\//\1\\/ge'
   normal 0
   setlocal nomodifiable
 endfunction " ZekCutNote
 
 
+function! s:ZekL7(u)
+  return '_' . strcharpart(a:u, len(a:u) - 7)
+endfunction " ZekL7
+
+
 function! s:ZekTieNote()
 
-  " TODO
+  let cu = <SID>ZekCurrentUuid()
+  let su = <SID>ZekNoteSelection()
+  let scu = <SID>ZekL7(cu)
+  let ssu = <SID>ZekL7(su)
+
+  if confirm('Tie note ' . ssu . ' to note ' . scu . '?', "&No\n&yes") == 1
+    return 0
+  endif
+
+  let car = ZekRun('tie', [ cu, su ], [])
+
+  if car[0] == 0
+    call <SID>ZekGreenEcho("Re-tied note " . su)
+  endif
 endfunction " ZekTieNote
 
 
