@@ -320,6 +320,18 @@ module Zek; class << self
     d
   end
 
+  def load_selves
+
+    $selves ||=
+      load_index('selves')
+        .inject({}) { |h, (k, v)|
+          if v.length == 1
+            h[k] = v.first
+            h[v.first] = k
+          end
+          h }
+  end
+
   protected
 
   def lookup_zek_repo_path(dir=Dir.pwd)

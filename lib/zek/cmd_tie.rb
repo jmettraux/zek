@@ -7,10 +7,12 @@ module Zek::CmdTie; class << self
 
   def execute(args, lines)
 
-    pu = args[0]
-    cu = args[1]
+    selves = Zek.load_selves
 
-    # TODO pu other self ?
+    pu = args[0]
+    pu = Zek.load_selves[pu] || pu
+
+    cu = args[1]
 
     cpath = Zek.note_path(cu)
 
