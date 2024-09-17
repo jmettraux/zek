@@ -48,7 +48,7 @@ function! s:ZekPrepChildNote()
 endfunction " ZekPrepChildNote
 
 
-function! s:ZekListNoteSelections()
+function! s:ZekNoteSelections()
 
   let a = []
     "
@@ -58,7 +58,14 @@ function! s:ZekListNoteSelections()
   endfor
 
   return a
-endfunction " ZekListNoteSelections()
+endfunction " ZekNoteSelections()
+
+
+function! s:ZekNoteSelection()
+
+  let a = <SID>ZekNoteSelections()
+  return empty(a) ? '' : a[0]
+endfunction " ZekNoteSelection()
 
 
 function! s:ZekClearNoteSelection()
@@ -73,17 +80,24 @@ endfunction " ZekClearNoteSelection
 
 function! s:ZekCutNote()
 
+  let cu = <SID>ZekCurrentUuid()
+  let su = <SID>ZekNoteSelection()
+
   call <SID>ZekClearNoteSelection()
+
+  if cu == su | return | endif
 
   setlocal modifiable
   normal 0
-  call search('[\/\\]', 'c')
+  call search('[\/\\] ', 'c') " TODO make me smarter...
   normal! r\
   setlocal nomodifiable
 endfunction " ZekCutNote
 
 
 function! s:ZekTieNote()
+
+  " TODO
 endfunction " ZekTieNote
 
 
