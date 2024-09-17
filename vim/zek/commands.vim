@@ -47,6 +47,32 @@ function! s:ZekPrepChildNote()
 endfunction " ZekPrepChildNote
 
 
+function! s:ZekClearNoteSelection()
+
+  let l = line('.')
+  setlocal modifiable
+  execute '%s/\v^( *)\\/\1\//ge'
+  setlocal nomodifiable
+  call cursor(l, 1)
+endfunction " ZekClearNoteSelection
+
+
+function! s:ZekCutNote()
+
+  call <SID>ZekClearNoteSelection()
+
+  setlocal modifiable
+  normal 0
+  call search('[\/\\]', 'c')
+  normal! r\
+  setlocal nomodifiable
+endfunction " ZekCutNote
+
+
+function! s:ZekTieNote()
+endfunction " ZekTieNote
+
+
 function! s:ZekDeleteNote()
 
   let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
@@ -209,6 +235,9 @@ function! s:ZekTrees(...)
   nnoremap <buffer> i :ZekIndex<CR>
 
   nnoremap <buffer> D :call <SID>ZekDeleteNote()<CR>
+
+  nnoremap <buffer> x :call <SID>ZekCutNote()<CR>
+  nnoremap <buffer> v :call <SID>ZekTieNote()<CR>
 endfunction " ZekTrees
 
 command! -nargs=* ZekTrees :call <SID>ZekTrees(<f-args>)
