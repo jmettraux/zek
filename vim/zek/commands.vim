@@ -88,9 +88,8 @@ function! s:ZekCutNote()
   if cu == su | return | endif
 
   setlocal modifiable
+  execute 's/\v^( *)\//\1\\/g'
   normal 0
-  call search('[\/\\] ', 'c') " TODO make me smarter...
-  normal! r\
   setlocal nomodifiable
 endfunction " ZekCutNote
 
