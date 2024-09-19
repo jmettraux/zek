@@ -151,7 +151,7 @@ module Zek::CmdIndex; class << self
     write_index(:tags, tags)
     write_index(:edges, edges)
     write_index(:parents, parents)
-    #write_index(:children, children)
+    write_index(:children, children)
 
     #
     # trees
