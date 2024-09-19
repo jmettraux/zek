@@ -277,6 +277,7 @@ function! s:ZekTrees(...)
 
   nnoremap <buffer> r :ZekTrees<CR>
   nnoremap <buffer> i :ZekIndex<CR>
+  nnoremap <buffer> b :ZekExportBookmarks<CR>
 
   nnoremap <buffer> D :call <SID>ZekDeleteNote()<CR>
 
@@ -293,12 +294,24 @@ function! s:ZekIndex()
 
   let car = ZekRun('index', [], [])
 
-  if car[0] == 0
-    call <SID>ZekGreenEcho("Indexed " . ZekRepoPath() . " took " . car[1])
-  endif
+  if car[0] != 0 | return | endif
+
+  call <SID>ZekGreenEcho("Indexed " . ZekRepoPath() . " took " . car[1])
 endfunction " ZekIndex
 
 command! -nargs=0 ZekIndex :call <SID>ZekIndex()
+
+
+function! s:ZekExportBookmarks()
+
+  let car = ZekRun('exportb', [], [])
+
+  if car[0] != 0 | return | endif
+
+  call <SID>ZekGreenEcho("Exported bookmarks to " . car[1])
+endfunction! " ZekExportBookmarks
+
+command! -nargs=0 ZekExportBookmarks :call <SID>ZekExportBookmarks()
 
 
 " dev helper
