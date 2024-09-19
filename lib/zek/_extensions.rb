@@ -29,5 +29,12 @@ class String
   alias without_ext without_extname
   alias wo_extname without_extname
   alias wo_ext without_extname
+
+  def hstrip
+
+    #self.gsub(/^\s*/, '').gsub(/\s*$/, '').strip
+    self.split("\n").collect(&:strip).join("\n").strip
+  end
+  alias htrip hstrip
 end
 
