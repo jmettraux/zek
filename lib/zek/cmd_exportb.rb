@@ -29,6 +29,7 @@ pp links
           <head>
             <title>#{Zek.repo_path} Bookmarks</title>
             <style>#{File.read(File.join(__dir__, 'cmd_exportb.css'))}</style>
+            <script>#{File.read(File.join(__dir__, 'cmd_exportb.js'))}</script>
           </head>
           <body>
       }.htrip)
