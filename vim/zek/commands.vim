@@ -314,6 +314,15 @@ endfunction! " ZekExportBookmarks
 command! -nargs=0 ZekExportBookmarks :call <SID>ZekExportBookmarks()
 
 
+function! s:ZekScratch()
+
+  execute 'edit ' . ZekFileJoin(ZekRepoPath(), 'scratch.md')
+  normal G
+endfunction " ZekScratch
+
+command! -nargs=0 ZekScratch :call <SID>ZekScratch()
+
+
 " dev helper
 "
 function! s:ZekArgs(...)
