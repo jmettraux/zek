@@ -70,13 +70,20 @@ pp links
 
   def parse_link(s)
 
-    { href: s }
+    if m = s.match(/(https?:[^ ]+) (.+)$/)
+      { href: m[1], description: m[2] }
+    else
+      { href: s }
+    end
   end
 
   def link_to_html(l)
 
     if l.keys == [ :href ]
       "<a href=\"#{l[:href]}\" target=\"_blank\">#{l[:href]}</a>"
+    elsif l.keys == [ :href, :description ]
+      "<a href=\"#{l[:href]}\" target=\"_blank\">#{l[:href]}</a>" +
+      "<span class=\"description\">#{l[:description]}</span>"
     else
       ''
     end
