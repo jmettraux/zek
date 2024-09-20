@@ -30,20 +30,16 @@ pp links
             <title>#{Zek.repo_path} Bookmarks</title>
             <style>#{File.read(File.join(__dir__, 'cmd_exportb.css'))}</style>
             <script>#{File.read(File.join(__dir__, 'cmd_exportb.js'))}</script>
+            #{File.read(File.join(__dir__, 'cmd_exportb.links'))}
           </head>
           <body>
+            <h1>#{Zek.repo_path} Bookmarks</h1>
       }.htrip)
 
       links.each do |c, ls|
         f.write("<h2>#{c}</h2>\n")
         f.write("<ul>\n")
-        ls.each do |l|
-          f.write("<li>")
-          f.write("<a href=\"#{l[:href]}\">")
-          f.write(l[:href])
-          f.write("</a>")
-          f.write("</li>\n")
-        end
+        ls.each { |l| f.write("  <li>#{link_to_html(l)}</li>\n") }
         f.write("</ul>\n")
       end
 
@@ -75,6 +71,15 @@ pp links
   def parse_link(s)
 
     { href: s }
+  end
+
+  def link_to_html(l)
+
+    if l.keys == [ :href ]
+      "<a href=\"#{l[:href]}\" target=\"_blank\">#{l[:href]}</a>"
+    else
+      ''
+    end
   end
 end; end
 
