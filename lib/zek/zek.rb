@@ -124,7 +124,7 @@ module Zek; class << self
   #
   def uuid
 
-    1_000.times do
+    777.times do
 
       u = _uuid
 

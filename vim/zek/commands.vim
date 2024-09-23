@@ -15,6 +15,12 @@ function! s:ZekGreenEcho(...)
   echohl ZekGreenEchoHighlight | echo join(a:000, ' ') | echohl None
 endfunction
 
+function! s:ZekBufferUuid()
+
+  let m = matchlist(expand('%:r'), '\v\/([0-9a-f]{32})_')
+  return empty(m) ? '' : m[1]
+endfunction " ZekCurrentUuid
+
 function! s:ZekCurrentUuid()
 
   let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
@@ -141,21 +147,35 @@ function! s:ZekOpenRoot()
   endif
 endfunction " ZekOpenRoot
 
+function! s:ZekExtractTitle()
 
-function! s:ZekWriteNote()
+  return "Foo Bar"
+endfunction " ZekExtractTitle
 
-  let car = ZekRun('make', [], getline(1, '$'))
+function! s:ZekPreWriteNote()
 
+  let t = ZekNtr(<SID>ZekExtractTitle())
+  let u = <SID>ZekBufferUuid()
+
+  # TODO change filename with title...
+
+  let car = ZekRun('mkdirp', [ u ], [])
   if car[0] != 0 | return | endif
 
-  execute "bdelete!"
-endfunction " ZekWriteNote
+  write
+
+endfunction " ZekPreWriteNote
 
 
 function! s:ZekPrepNote(u)
 
+  let car = ZekRun('uuidp', [], [])
+  if car[0] != 0 | return | endif
+
   exe 'new | only'
   setlocal syntax=markdown
+
+  exe "file " . car[1] . "_xxx.md"
 
   if strlen(a:u) == 32
     exe "normal! i" . "[parent](" . a:u . ")"
@@ -164,9 +184,9 @@ function! s:ZekPrepNote(u)
   exe "normal! kkk0lll"
 
   nnoremap <buffer> qq :bdelete!<CR>
-  nnoremap <buffer> ww :call <SID>ZekWriteNote()<CR>
+  "nnoremap <buffer> ww :call <SID>ZekWriteNote()<CR>
 
-  "autocmd BufWritePre <buffer> call <SID>ZekWriteNote()
+  autocmd BufWriteCmd <buffer> call <SID>ZekPreWriteNote()
     " meh...
 
   "call <SID>ZekGreenEcho("ww to save, qq to cancel...")
