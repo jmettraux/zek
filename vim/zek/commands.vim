@@ -147,23 +147,32 @@ function! s:ZekOpenRoot()
   endif
 endfunction " ZekOpenRoot
 
+
 function! s:ZekExtractTitle()
 
-  return "Foo Bar"
+  for i in range(1, line('$'))
+    let m = matchlist(getline(i), '\v^#{1,2} (.+)$')
+    if ! empty(m) | return m[1] | endif
+  endfor
+
+  return "no title"
 endfunction " ZekExtractTitle
+
 
 function! s:ZekPreWriteNote()
 
-  let t = ZekNtr(<SID>ZekExtractTitle())
-  let u = <SID>ZekBufferUuid()
+  if match(expand('%:p'), '\v__\.md$')
 
-  # TODO change filename with title...
+    let t = ZekNtr(<SID>ZekExtractTitle())
+    let u = <SID>ZekBufferUuid()
 
-  let car = ZekRun('mkdirp', [ u ], [])
-  if car[0] != 0 | return | endif
+    exe 'file ' . expand('%:h') . '/' . u . '_' . t . '.md'
 
-  write
+    let car = ZekRun('mkdirp', [ u ], [])
+    if car[0] != 0 | return | endif
+  endif
 
+  write!
 endfunction " ZekPreWriteNote
 
 
@@ -175,7 +184,7 @@ function! s:ZekPrepNote(u)
   exe 'new | only'
   setlocal syntax=markdown
 
-  exe "file " . car[1] . "_xxx.md"
+  exe "file " . car[1] . "__.md"
 
   if strlen(a:u) == 32
     exe "normal! i" . "[parent](" . a:u . ")"
