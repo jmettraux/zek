@@ -70,8 +70,10 @@ pp links
 
   def parse_link(s)
 
-    if m = s.match(/(https?:[^ ]+) (.+)$/)
-      { href: m[1], description: m[2] }
+    if m = s.match(/https?:[^\t ]+$/)
+      { href: s }
+    elsif m = s.match(/(https?:[^ ]+)[\t ]*([-—][\t ]*)?(.+)$/)
+      { href: m[1], description: m[3] }
     else
       { href: s }
     end

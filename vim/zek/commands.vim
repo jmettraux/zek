@@ -193,7 +193,6 @@ function! s:ZekPrepNote(u)
   exe "normal! kkk0lll"
 
   nnoremap <buffer> qq :bdelete!<CR>
-  "nnoremap <buffer> ww :call <SID>ZekWriteNote()<CR>
 
   autocmd BufWriteCmd <buffer> call <SID>ZekPreWriteNote()
     " meh...
