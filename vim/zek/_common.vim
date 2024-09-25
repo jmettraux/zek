@@ -51,3 +51,17 @@ function! ZekRepoPath()
   return fnamemodify(p, ':p')
 endfunction " ZekRepoPath
 
+
+function! ZekUpdateMtime()
+
+  for i in range(line('$'), 1, -1)
+    if getline(i) =~ '\v^\<!-- mtime: .+ --\>$'
+      call deletebufline('%', i)
+    endif
+  endfor
+
+  call append(
+    \ line('$'),
+    \ "<!-- mtime: " . strftime('%Y-%m-%dT%H:%M:%S%z') . " -->")
+endfunction " ZekUpdateMtime
+

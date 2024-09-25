@@ -161,7 +161,7 @@ function! s:ZekExtractTitle()
 endfunction " ZekExtractTitle
 
 
-function! s:ZekPreWriteNote()
+function! s:ZekWriteNote()
 
   if match(expand('%:p'), '\v__\.md$')
 
@@ -174,8 +174,10 @@ function! s:ZekPreWriteNote()
     if car[0] != 0 | return | endif
   endif
 
+  call ZekUpdateMtime()
+
   write!
-endfunction " ZekPreWriteNote
+endfunction " ZekWriteNote
 
 
 function! s:ZekPrepNote(u)
@@ -191,12 +193,12 @@ function! s:ZekPrepNote(u)
   if strlen(a:u) > 0
     exe "normal! i" . "[parent](" . a:u . ")"
   endif
-  exe "normal! o## New NoteLore ipsum..."
+  exe "normal! o## New NoteLore ipsum...<!-- mtime: .now. -->"
   exe "normal! kkk0lll"
 
   nnoremap <buffer> qq :bdelete!<CR>
 
-  autocmd BufWriteCmd <buffer> call <SID>ZekPreWriteNote()
+  autocmd BufWriteCmd <buffer> call <SID>ZekWriteNote()
     " meh...
 
   "call <SID>ZekGreenEcho("ww to save, qq to cancel...")
