@@ -49,6 +49,25 @@ function! s:ZekGoTrees()
 endfunction " ZekGoTrees
 
 
+function! s:ZekUpdateMtime()
+
+  for i in range(line('$'), 1, -1)
+    if getline(i) =~ '\v^\<!-- mtime: .+ --\>$'
+      call deletebufline('%', i)
+    endif
+  endfor
+
+  call append(
+    \ line('$'),
+    \ "<!-- mtime: " . strftime('%Y-%m-%dT%H:%M:%S%z') . " -->")
+endfunction " ZekUpdateMtime
+
+function! s:ZekWriteNote()
+
+  call <SID>ZekUpdateMtime()
+endfunction " ZekWriteNote
+
+
 function! s:OnZekNote()
 
   nnoremap <buffer> gg :call <SID>ZekFollowLink()<CR>
@@ -56,6 +75,8 @@ function! s:OnZekNote()
   nnoremap <buffer> T :call <SID>ZekGoTrees()<CR>
   nnoremap <buffer> gp :call <SID>ZekGoParent()<CR>
   nnoremap <buffer> gr :call <SID>ZekGoRoot()<CR>
+
+  autocmd BufWritePre <buffer> call <SID>ZekWriteNote()
 endfunction " onZekNote
 
 
