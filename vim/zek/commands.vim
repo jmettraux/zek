@@ -49,8 +49,10 @@ endfunction " ZekMakeChildNote
 function! s:ZekPrepChildNote()
 
   let u = <SID>ZekCurrentUuid() | if u == '' | return | endif
+  let car = ZekRun('self', [ u ], [])
+  if car[0] != 0 | return | endif
 
-  call <SID>ZekPrepNote(u)
+  call <SID>ZekPrepNote(car[1])
 endfunction " ZekPrepChildNote
 
 
@@ -186,7 +188,7 @@ function! s:ZekPrepNote(u)
 
   exe "file " . car[1] . "__.md"
 
-  if strlen(a:u) == 32
+  if strlen(a:u) > 0
     exe "normal! i" . "[parent](" . a:u . ")"
   endif
   exe "normal! o## New NoteLore ipsum..."
