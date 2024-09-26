@@ -355,6 +355,20 @@ endfunction " ZekScratch
 command! -nargs=0 ZekScratch :call <SID>ZekScratch()
 
 
+function! s:ZekCommit()
+
+  let m = "commit message"
+
+  let car = ZekRun('commit', [ m ], [])
+
+  if car[0] != 0 | return | endif
+
+  call <SID>ZekGreenEcho("commited " . car[1])
+endfunction! " ZekExportBookmarks
+
+command! -nargs=0 ZekCommit :call <SID>ZekCommit()
+
+
 " dev helper
 "
 function! s:ZekArgs(...)

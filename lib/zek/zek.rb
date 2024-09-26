@@ -31,6 +31,11 @@ module Zek; class << self
     File.join(*aa)
   end
 
+  def dpath(*a)
+
+    Dir[path(*a)]
+  end
+
   AA_REX = /\A[a-f0-9]{2}\z/.freeze
   UUID_REX = /\A[a-f0-9]{32}\z/.freeze
 
