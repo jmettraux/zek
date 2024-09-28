@@ -7,12 +7,16 @@
 
 highlight ZekRedEchoHighlight ctermfg=red ctermbg=none
 highlight ZekGreenEchoHighlight ctermfg=green ctermbg=none
+highlight ZekYellowEchoHighlight ctermfg=darkyellow ctermbg=none
   "
 function! s:ZekRedEcho(...)
   echohl ZekRedEchoHighlight | echo join(a:000, ' ') | echohl None
 endfunction
 function! s:ZekGreenEcho(...)
   echohl ZekGreenEchoHighlight | echo join(a:000, ' ') | echohl None
+endfunction
+function! s:ZekYellowEcho(...)
+  echohl ZekYellowEchoHighlight | echo join(a:000, ' ') | echohl None
 endfunction
 
 function! s:ZekBufferUuid()
@@ -370,6 +374,21 @@ endfunction! " ZekExportBookmarks
 
 "command! -nargs=0 ZekCommit :call <SID>ZekCommit()
 command! -nargs=* ZekCommit :call <SID>ZekCommit(<q-args>)
+
+
+function! s:ZekBackup()
+
+  call <SID>ZekYellowEcho("backing up " . ZekRepoPath() . " ...")
+
+  let car = ZekRun('backup', [], [])
+
+  if car[0] != 0 | return | endif
+
+  call <SID>ZekGreenEcho(car[1])
+endfunction! " ZekExportBookmarks
+
+"command! -nargs=0 ZekBak :call <SID>ZekBackup()
+command! -nargs=0 ZekBackup :call <SID>ZekBackup()
 
 
 " dev helper
