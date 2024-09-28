@@ -355,18 +355,21 @@ endfunction " ZekScratch
 command! -nargs=0 ZekScratch :call <SID>ZekScratch()
 
 
-function! s:ZekCommit()
+function! s:ZekCommit(message)
 
-  let m = "commit message"
+  let m = trim(a:message)
+  if strlen(m) < 1 | let m = "commit message" | endif
+  let m = substitute(m, '"', '\\"', 'g')
 
-  let car = ZekRun('commit', [ m ], [])
+  let car = ZekRun('commit', [ '"' . m . '"' ], [])
 
   if car[0] != 0 | return | endif
 
   call <SID>ZekGreenEcho("commited " . car[1])
 endfunction! " ZekExportBookmarks
 
-command! -nargs=0 ZekCommit :call <SID>ZekCommit()
+"command! -nargs=0 ZekCommit :call <SID>ZekCommit()
+command! -nargs=* ZekCommit :call <SID>ZekCommit(<q-args>)
 
 
 " dev helper

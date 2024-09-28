@@ -20,6 +20,7 @@ module Zek::CmdCommit; class << self
 
     g = "-c color.ui=false"
     m = args.first.to_s
+    #puts ">#{m}<"
 
     system(
       "cd #{Zek.repo_path} && " +
