@@ -23,7 +23,7 @@ module Zek::CmdCommit; class << self
 
     system(
       "cd #{Zek.repo_path} && " +
-      "git #{g} add #{dirs} && " +
+      "git #{g} add index #{dirs} && " +
       "git #{g} commit -m #{m.inspect}")
   end
 
