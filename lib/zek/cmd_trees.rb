@@ -26,7 +26,11 @@ module Zek::CmdTrees; class << self
       "/ #{nd[:title]} | #{node[0]} #{nd[:size]} #{nd[:lines]}l | #{nd[:line]}"
         ).rstrip
 
-    s = s[0, COLS - 1] + '…' if s.length > COLS
+    sl = s.length
+    stl = s.term_length
+      #
+    s = s[0, COLS - 1 - (stl - sl)] + '…' \
+      if stl > COLS
 
     puts s
 

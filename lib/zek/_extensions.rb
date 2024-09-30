@@ -36,5 +36,14 @@ class String
     self.split("\n").collect(&:strip).join("\n").strip
   end
   alias htrip hstrip
+
+  def term_length
+
+    chars.inject(0) { |r, c| c.match?(/\p{Han}/) ? r + 2 : r + 1 }
+  end
+
+  #def extra_length
+  #  chars.inject(0) { |r, c| c.match?(/\p{Han}/) ? r + 1 : r }
+  #end
 end
 
