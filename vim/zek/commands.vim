@@ -167,7 +167,7 @@ endfunction " ZekExtractTitle
 
 function! s:ZekWriteNote()
 
-  if match(expand('%:p'), '\v__\.md$')
+  if match(expand('%:p'), '\v__\.md$') > -1
 
     let t = ZekNtr(<SID>ZekExtractTitle())
     let u = <SID>ZekBufferUuid()

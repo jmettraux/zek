@@ -20,7 +20,7 @@ function! s:ZekReadRepoPath(fn)
   for l in readfile(a:fn)
     let l = trim(l)
     if empty(l) | continue | endif
-    if match(l, '\v^#') | continue | endif
+    if match(l, '\v^#') > -1 | continue | endif
     return l
   endfor
   return ''
