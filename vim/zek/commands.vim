@@ -275,7 +275,7 @@ function! s:ZekTrees(...)
 
   if car[0] != 0 | return | endif
 
-  let fn = '_zktr___' . ZekNtr(join(a:000, '_'))
+  let fn = '_zktrs___' . ZekNtr(join(a:000, '_'))
   let bn = JmBufferNumber(fn)
 
   if bn > -1 | exe '' . bn . 'bwipeout!' | endif
@@ -301,6 +301,7 @@ function! s:ZekTrees(...)
   setlocal syntax=zektree
   setlocal nomodifiable
 
+  nnoremap <buffer> e :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> <CR> :call <SID>ZekOpenNote()<CR>
   "nnoremap <buffer> e :call JmOpenTreeFile('edit')<CR>
@@ -314,6 +315,8 @@ function! s:ZekTrees(...)
   nnoremap <buffer> r :ZekTrees<CR>
   nnoremap <buffer> i :ZekIndex<CR>
   nnoremap <buffer> b :ZekExportBookmarks<CR>
+  nnoremap <buffer> w :ZekWords<CR>
+  nnoremap <buffer> W :ZekWords r<CR>
 
   nnoremap <buffer> D :call <SID>ZekDeleteNote()<CR>
 
@@ -322,6 +325,55 @@ function! s:ZekTrees(...)
 endfunction " ZekTrees
 
 command! -nargs=* ZekTrees :call <SID>ZekTrees(<f-args>)
+
+
+function! s:ZekWords(...)
+
+  if &mod == 1 | echoerr "Current buffer has unsaved changes." | return | endif
+
+  let car = ZekRun('words', a:000, [])
+
+  if car[0] != 0 | return | endif
+
+  let fn = '_zkwds___' . ZekNtr(join(a:000, '_'))
+  let bn = JmBufferNumber(fn)
+
+  if bn > -1 | exe '' . bn . 'bwipeout!' | endif
+    " close previous zek buffer if any
+
+  exe 'new | only'
+    " | only makes it full window
+
+  exe 'silent file ' . fn
+
+  setlocal buftype=nofile
+  setlocal bufhidden=hide
+  setlocal noswapfile
+  setlocal cursorline
+
+  exe "normal i# " . ZekRepoPath() . " words"
+
+  silent put= car[1]
+
+  exe "normal! Go"
+
+  "normal 1G
+  setlocal syntax=zektree
+  setlocal nomodifiable
+
+  " TODO continue me...
+  nnoremap <buffer> e :call <SID>ZekOpenNote()<CR>
+  nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
+  nnoremap <buffer> <CR> :call <SID>ZekOpenNote()<CR>
+
+  nnoremap <buffer> R :call <SID>ZekOpenRoot()<CR>
+
+  nnoremap <buffer> t :ZekTrees<CR>
+  nnoremap <buffer> w :ZekWords<CR>
+  nnoremap <buffer> W :ZekWords r<CR>
+endfunction # ZekWords
+
+command! -nargs=* ZekWords :call <SID>ZekWords(<f-args>)
 
 
 " Trigger Zek indexation of the repository
