@@ -19,22 +19,22 @@ function! s:ZekYellowEcho(...)
   echohl ZekYellowEchoHighlight | echo join(a:000, ' ') | echohl None
 endfunction
 
-function! s:ZekBufferUuid()
+function! s:ZekGetUuid(s)
+  let m = matchlist(a:s, '\v ([0-9a-f]{32}) ')
+  return empty(m) ? '' : m[1]
+endfunction
 
+function! s:ZekBufferUuid()
   let m = matchlist(expand('%:r'), '\v\/([0-9a-f]{32})_')
   return empty(m) ? '' : m[1]
 endfunction " ZekCurrentUuid
 
 function! s:ZekCurrentUuid()
-
-  let m = matchlist(getline('.'), '\v ([0-9a-f]{32}) ')
-  return empty(m) ? '' : m[1]
+  return <SID>ZekGetUuid(getline('.'))
 endfunction " ZekCurrentUuid
 
 function! s:ZekOpenNote()
-
   let u = <SID>ZekCurrentUuid() | if u == '' | return | endif
-
   call ZekOpenLink(u)
 endfunction " ZekOpenNote
 
@@ -267,6 +267,23 @@ endfunction " ZekMakeNote
 vnoremap zz :call <SID>ZekMakeNote()
 
 
+function! s:ZekTreeNode()
+
+  let u = <SID>ZekCurrentUuid() | if u == '' | return | endif
+
+  call <SID>ZekTrees()
+
+  for i in range(1, line('$'))
+    let lu = <SID>ZekGetUuid(getline(i))
+    if (lu == u)
+      call cursor(i, 1)
+      break
+    endif
+  endfor
+
+endfunction " ZekTreeNode
+
+
 function! s:ZekTrees(...)
 
   if &mod == 1 | echoerr "Current buffer has unsaved changes." | return | endif
@@ -365,6 +382,7 @@ function! s:ZekWords(...)
   nnoremap <buffer> e :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> <CR> :call <SID>ZekOpenNote()<CR>
+  nnoremap <buffer> <space> :call <SID>ZekTreeNode()<CR>
 
   nnoremap <buffer> R :call <SID>ZekOpenRoot()<CR>
 
@@ -413,6 +431,7 @@ function! s:ZekTags(...)
   nnoremap <buffer> e :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> <CR> :call <SID>ZekOpenNote()<CR>
+  nnoremap <buffer> <space> :call <SID>ZekTreeNode()<CR>
 
   nnoremap <buffer> R :call <SID>ZekOpenRoot()<CR>
 
