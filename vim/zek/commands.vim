@@ -317,6 +317,7 @@ function! s:ZekTrees(...)
   nnoremap <buffer> b :ZekExportBookmarks<CR>
   nnoremap <buffer> w :ZekWords<CR>
   nnoremap <buffer> W :ZekWords r<CR>
+  nnoremap <buffer> g :ZekTags<CR>
 
   nnoremap <buffer> D :call <SID>ZekDeleteNote()<CR>
 
@@ -361,7 +362,6 @@ function! s:ZekWords(...)
   setlocal syntax=zektree
   setlocal nomodifiable
 
-  " TODO continue me...
   nnoremap <buffer> e :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
   nnoremap <buffer> <CR> :call <SID>ZekOpenNote()<CR>
@@ -374,6 +374,54 @@ function! s:ZekWords(...)
 endfunction # ZekWords
 
 command! -nargs=* ZekWords :call <SID>ZekWords(<f-args>)
+
+
+function! s:ZekTags(...)
+
+  if &mod == 1 | echoerr "Current buffer has unsaved changes." | return | endif
+
+  let car = ZekRun('tags', a:000, [])
+
+  if car[0] != 0 | return | endif
+
+  let fn = '_zktgs___' . ZekNtr(join(a:000, '_'))
+  let bn = JmBufferNumber(fn)
+
+  if bn > -1 | exe '' . bn . 'bwipeout!' | endif
+    " close previous zek buffer if any
+
+  exe 'new | only'
+    " | only makes it full window
+
+  exe 'silent file ' . fn
+
+  setlocal buftype=nofile
+  setlocal bufhidden=hide
+  setlocal noswapfile
+  setlocal cursorline
+
+  exe "normal i# " . ZekRepoPath() . " tags"
+
+  silent put= car[1]
+
+  exe "normal! Go"
+
+  "normal 1G
+  setlocal syntax=zektree
+  setlocal nomodifiable
+
+  nnoremap <buffer> e :call <SID>ZekOpenNote()<CR>
+  nnoremap <buffer> o :call <SID>ZekOpenNote()<CR>
+  nnoremap <buffer> <CR> :call <SID>ZekOpenNote()<CR>
+
+  nnoremap <buffer> R :call <SID>ZekOpenRoot()<CR>
+
+  nnoremap <buffer> t :ZekTrees<CR>
+  nnoremap <buffer> w :ZekWords<CR>
+  nnoremap <buffer> W :ZekWords r<CR>
+endfunction # ZekWords
+
+command! -nargs=* ZekTags :call <SID>ZekTags(<f-args>)
 
 
 " Trigger Zek indexation of the repository
