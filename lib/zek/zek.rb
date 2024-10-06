@@ -151,6 +151,15 @@ module Zek; class << self
   end
   alias uuid? is_uuid?
 
+  # Given the beginning of a uuid, return the first matching uuid in the repo
+  #
+  def find_uuid(u)
+
+    pa = Zek.paths(u + '*').first
+
+    pa ? File.basename(pa)[0, 32] : nil
+  end
+
   def uuid_to_time(u)
 
     u = extract_uuid(u); return nil unless u

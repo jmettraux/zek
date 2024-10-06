@@ -20,8 +20,17 @@ function! s:ZekYellowEcho(...)
 endfunction
 
 function! s:ZekGetUuid(s)
+
   let m = matchlist(a:s, '\v ([0-9a-f]{32}) ')
-  return empty(m) ? '' : m[1]
+  if ! empty(m) | return m[1] | endif
+
+  let m = matchlist(a:s, '\v ([0-9a-f]+)…')
+  if empty(m) | return '' | endif
+
+  let car = ZekRun('uui', [ m[1] ], [])
+  if car[0] != 0 | return '' | endif
+
+  return car[1]
 endfunction
 
 function! s:ZekBufferUuid()
