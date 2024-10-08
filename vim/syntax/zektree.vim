@@ -26,7 +26,7 @@ syn match zktRoot '\v(# )@<=[^ ]+' contained
 
 syn match zktNote '\v *\/ .+$' contains=zktSlash,zktUuid,zktSizes,zktLine,zktPipe
 syn match zktSlash '\v( *)@<=\/( )@=' contained
-syn match zktUuid '\v( \| )@<=[0-9a-f]{32}( [0-9])@=' contained
+syn match zktUuid '\v( \| )@<=([0-9a-f]{32}( [0-9])@=|[0-9a-f]+…)' contained
 syn match zktSizes '\v([0-9a-f] )@<=[0-9]+ [0-9]+l( \|)@=' contained
 syn match zktLine '\v([0-9]l \|)@<= .*' contained
 syn match zktPipe '\v( )\|( ?)@=' contained
