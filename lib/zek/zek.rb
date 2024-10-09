@@ -264,9 +264,11 @@ module Zek; class << self
     line
       .scan(/\w+/)
       .reject { |w| w.length == 1 }
-      .reject { |w| w.match(/^\d+/) }
+      .reject { |w| w.match(/^(_|\d+)/) }
+      .reject { |w| w.match(/_$/) }
       .collect(&:downcase)
       .reject { |w| stop_words.include?(w) }
+      .reject { |w| %w[ parent self mtime ].include?(w) }
   end
 
   ATTACHMENT_SUFFIXES = %w[
