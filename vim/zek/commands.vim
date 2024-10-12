@@ -489,6 +489,8 @@ command! -nargs=0 ZekScratch :call <SID>ZekScratch()
 
 function! s:ZekCommit(message)
 
+  if &mod == 1 | echoerr "Current buffer has unsaved changes." | return | endif
+
   let m = trim(a:message)
   if strlen(m) < 1 | let m = "commit message" | endif
   let m = substitute(m, '"', '\\"', 'g')
