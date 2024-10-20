@@ -261,8 +261,12 @@ module Zek; class << self
 
   def extract_words(line)
 
+      #.scan(/\w+/)
+      #.scan(/\p{L}+/)
+        # the latter is OK with accented characters
+
     line
-      .scan(/\w+/)
+      .scan(/\p{L}+/)
       .reject { |w| w.length == 1 }
       .reject { |w| w.match(/^(_|\d+)/) }
       .reject { |w| w.match(/_$/) }
