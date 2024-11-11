@@ -39,7 +39,10 @@ class String
 
   def term_length
 
-    chars.inject(0) { |r, c| c.match?(/\p{Han}/) ? r + 2 : r + 1 }
+    chars
+      .inject(0) { |r, c|
+        c.match?(/[\p{Han}\p{Hiragana}\p{Katakana}]/) ? r + 2 :
+        r + 1 }
   end
 
   #def extra_length

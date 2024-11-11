@@ -5,17 +5,19 @@
 
 module Zek::CmdWords; class << self
 
+  # FIXME word term_length, etc..., use the (stl -sl) delta...
+
   def execute(args, lines)
 
     ws = Zek.load_index('words')
     ss = Zek.load_index('summaries')
 
-    max = ws.map { |w, _| w.length }.max + 1
+    max = ws.map { |w, _| w.term_length }.max + 1
 
     ws = ws.to_a.reverse if args.include?('r')
 
     ws.each do |w, is|
-      print "#{w}#{' ' * (max - w.length)}"; print_node(ss, is[0], max)
+      print "#{w}#{' ' * (max - w.term_length)}"; print_node(ss, is[0], max)
       is[1..-1].each { |i| print ' ' * max; print_node(ss, i, max) }
     end
   end
