@@ -517,7 +517,7 @@ function! s:ZekBackup()
   call <SID>ZekGreenEcho(car[1])
 endfunction! " ZekExportBookmarks
 
-"command! -nargs=0 ZekBak :call <SID>ZekBackup()
+command! -nargs=0 ZekBak :call <SID>ZekBackup()
 command! -nargs=0 ZekBackup :call <SID>ZekBackup()
 
 
