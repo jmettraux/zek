@@ -520,6 +520,11 @@ endfunction! " ZekExportBookmarks
 command! -nargs=0 ZekBak :call <SID>ZekBackup()
 command! -nargs=0 ZekBackup :call <SID>ZekBackup()
 
+function! s:ZekVerifyIsbn()
+endfunction! " ZekVerifyIsbnBookmarks
+
+command! -nargs=0 ZekVerif :call <SID>ZekVerifyIsbn()
+
 
 " dev helper
 "
