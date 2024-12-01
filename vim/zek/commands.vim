@@ -521,9 +521,17 @@ command! -nargs=0 ZekBak :call <SID>ZekBackup()
 command! -nargs=0 ZekBackup :call <SID>ZekBackup()
 
 function! s:ZekVerifyIsbn()
+
+  let car = ZekRun('visbn', [ expand('<cWORD>') ], [])
+
+  if car[0] != 0 | return | endif
+
+  "call <SID>ZekGreenEcho(car[1])
+  execute "normal caW" . trim(car[1]) . " "
 endfunction! " ZekVerifyIsbnBookmarks
 
-command! -nargs=0 ZekVerif :call <SID>ZekVerifyIsbn()
+command! -nargs=0 ZekVerifyIsbn :call <SID>ZekVerifyIsbn()
+command! -nargs=0 Zeki :call <SID>ZekVerifyIsbn()
 
 
 " dev helper
