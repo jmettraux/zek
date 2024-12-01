@@ -40,7 +40,12 @@ module Zek::CmdVisbn; class << self
 
   def execute(args, lines)
 
-    i = args[0].to_s.gsub(/[^\dX]/, '')
+    a0 = args[0].to_s
+
+    fail "invalid chars in ISBN #{args[0].inspect}" \
+      if a0.match?(/[^-0-9X]/)
+
+    i = a0.gsub(/[^\dX]/, '')
 
     if i.length == 10
 
@@ -73,7 +78,7 @@ module Zek::CmdVisbn; class << self
 
     else
 
-      fail "not an ISBN >#{args[0]}<"
+      fail "not an ISBN #{args[0].inspect}"
     end
   end
 
