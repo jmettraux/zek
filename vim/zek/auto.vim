@@ -63,7 +63,7 @@ function! s:OnZekNote()
   nnoremap <buffer> gp :call <SID>ZekGoParent()<CR>
   nnoremap <buffer> gr :call <SID>ZekGoRoot()<CR>
 
-  command! -nargs=0 Emdash :normal a — <ESC>
+  command! -nargs=0 Emdash :normal A — <ESC>
 
   autocmd BufWritePre <buffer> call <SID>ZekWriteNote()
 endfunction " onZekNote
