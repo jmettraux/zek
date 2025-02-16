@@ -531,6 +531,7 @@ function! s:ZekVerifyIsbn()
 endfunction! " ZekVerifyIsbnBookmarks
 
 command! -nargs=0 ZekVerifyIsbn :call <SID>ZekVerifyIsbn()
+command! -nargs=0 ZekIsbn :call <SID>ZekVerifyIsbn()
 command! -nargs=0 Zeki :call <SID>ZekVerifyIsbn()
 
 
