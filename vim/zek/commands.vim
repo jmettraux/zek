@@ -227,7 +227,8 @@ function! ZekRun(cmd, args, lines)
 
   let cmd = a:cmd . ' ' . join(a:args, ' ')
 
-  let s = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
+  "let s = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd, a:lines)
+  let s = system(g:_zek_ruby . ' ' . g:_zek_rb . ' ' . cmd . ' 2>/dev/null', a:lines)
   let s = trim(s)
 
   let e = v:shell_error
